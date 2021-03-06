@@ -1,6 +1,6 @@
 # Amanager
 
-Amanager est un bot Discord multi-tâche qui peut vous aider ou avec qui vous pouvez vous divertir !
+Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous pouvez vous divertir !
 
 **Comment l'inviter ?**
 
