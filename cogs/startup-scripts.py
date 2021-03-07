@@ -23,7 +23,7 @@ class Others(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot == False:
-            botinfo_aliases = [f"+botinfo", f"+ping", f"+uptime", f"+bi"]
+            botinfo_aliases = [f"{self.client.command_prefix}botinfo", f"{self.client.command_prefix}ping", f"{self.client.command_prefix}uptime", f"{self.client.command_prefix}bi"]
             if message.content in botinfo_aliases:
                 uptime_now = datetime.now()
                 t1 = timedelta(days=uptime_start.day, hours=uptime_start.hour, minutes=uptime_start.minute, seconds=uptime_start.second)

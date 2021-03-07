@@ -65,9 +65,9 @@ class Others(commands.Cog):
                     new_link = urlz_service.text
 
                 else:
-                    await ctx.send(f"Entre un service valide ! (Plus d'infos : **+help shorten**)")
+                    await ctx.send(f"Entre un service valide ! (Plus d'infos : **{self.client.command_prefix}help shorten**)")
 
-                embed = discord.Embed(title=f"+shorten <service> [lien]")
+                embed = discord.Embed(title=f"{self.client.command_prefix}shorten <service> [lien]")
                 embed.add_field(name="Lien d'origine :", value=f"{long_link}", inline=False)
                 embed.add_field(name="Lien raccourci :", value=f"{new_link}", inline=False)
                 embed.set_footer(text=f"Service utilisé : {service}")

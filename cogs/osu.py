@@ -8,15 +8,19 @@ class Others(commands.Cog):
 
     @commands.command()
     async def osu(self, ctx, reason = None, *, arg = None):
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        osu_api_key = json_object_nm['token']['osu']
         if reason == None or arg == None:
-            await ctx.send(f"{ctx.author.mention} N'oublie pas d'arguments ! (**user** ou **beatmap**, plus d'infos avec **+help osu** !)")
+            await ctx.send(f"{ctx.author.mention} N'oublie pas d'arguments ! (**user** ou **beatmap**, plus d'infos avec **{self.client.command_prefix}help osu** !)")
         elif reason == "user":
             async with ctx.typing():
-                osu_user = requests.get(f"https://osu.ppy.sh/api/get_user?u={arg}&k=f5212eb7f05b4891bf496ba77f831bfac1d90ce2").json()
+                osu_user = requests.get(f"https://osu.ppy.sh/api/get_user?u={arg}&k={osu_api_key}").json()
                 try:
                     osu_user = osu_user[0]
                 except:
-                    await ctx.send(f"{ctx.author.mention} Le joueur que tu recherches n'a pas été retrouvé... ré-essaye :wink: (**+help osu**)")
+                    await ctx.send(f"{ctx.author.mention} Le joueur que tu recherches n'a pas été retrouvé... ré-essaye :wink: (**{self.client.command_prefix}help osu**)")
 
                 secs = int(osu_user['total_seconds_played'])
                 days = secs//86400
@@ -40,19 +44,16 @@ class Others(commands.Cog):
 
         elif reason == "beatmap":
             async with ctx.typing():
-                osu_map = requests.get(f"https://osu.ppy.sh//api/get_beatmaps?b={arg}&k=f5212eb7f05b4891bf496ba77f831bfac1d90ce2").json()
+                osu_map = requests.get(f"https://osu.ppy.sh//api/get_beatmaps?b={arg}&k={osu_api_key}").json()
                 try:
                     osu_map = osu_map[0]
                 except:
-                    await ctx.send(f"{ctx.author.mention} La beatmap que tu recherches n'a pas été retrouvé... ré-essaye :wink: (**+help osu**)")
+                    await ctx.send(f"{ctx.author.mention} La beatmap que tu recherches n'a pas été retrouvé... ré-essaye :wink: (**{self.client.command_prefix}help osu**)")
                 seconds = int(osu_map['total_length'])
                 seconds = seconds % (24 * 3600) 
                 seconds %= 3600
                 minutes = seconds // 60
                 seconds %= 60
-                a_file = open("no-move.json", "r")
-                json_object_nm = json.load(a_file)
-                a_file.close()
                 mode = osu_map['mode']
                 mode = json_object_nm['osu']['mode'][str(mode)]
                 languages = osu_map['language_id']
@@ -72,7 +73,6 @@ class Others(commands.Cog):
                 embed.add_field(name="Nombre de spinners", value=osu_map['count_spinner'], inline=True)
                 embed.add_field(name="Date d'upload", value=osu_map['submit_date'], inline=True)
                 embed.add_field(name="Dernière update", value=osu_map['last_update'], inline=True)
-                embed.set_image(url=f"https://assets.ppy.sh/beatmaps/{str(osu_map['beatmap_id'])}/covers/cover.jpg")
             await ctx.send(embed=embed)
 
 def setup(client):

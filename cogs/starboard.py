@@ -135,7 +135,7 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                 server_values = cursor.fetchone()
                 if server_values == None:
-                    await ctx.send(f"{ctx.author.mention} Désolé mais tu ne peux pas modifier ton starboard car tu n'en as pas créé. Si tu veux en créer un, fait **+starboard create** !")
+                    await ctx.send(f"{ctx.author.mention} Désolé mais tu ne peux pas modifier ton starboard car tu n'en as pas créé. Si tu veux en créer un, fait **{self.client.command_prefix}starboard create** !")
                 else:
                     embed = discord.Embed(title="Bienvenue dans le menu d'édition du starboard.", description=ctx.author.mention)
                     embed.add_field(name=":one: Obtenir des informations sur le starboard de ce serveur.", value="** **", inline=False)

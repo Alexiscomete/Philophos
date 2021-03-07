@@ -29,9 +29,9 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 if cursor.fetchone() == None:
                     if member == ctx.author:
-                        await ctx.send("Tu ne peux pas afficher ta carte car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **+start**)")
+                        await ctx.send(f"Tu ne peux pas afficher ta carte car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **{self.client.command_prefix}start**)")
                     else:
-                        await ctx.send("Tu ne peux pas afficher la carte de cette personne car elle ne s'est pas inscrite à l'aventure ISO land... (Elle peut débuter en faisant **+start**)")
+                        await ctx.send(f"Tu ne peux pas afficher la carte de cette personne car elle ne s'est pas inscrite à l'aventure ISO land... (Elle peut débuter en faisant **{self.client.command_prefix}start**)")
                 else:
                     cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                     member_values = cursor.fetchone()
@@ -57,7 +57,7 @@ class Others(commands.Cog):
             member_id = (f"{ctx.author.id}",)
             cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
             if cursor.fetchone() == None:
-                await ctx.send("Tu ne peux pas éditer ta carte car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **+start**)")
+                await ctx.send(f"Tu ne peux pas éditer ta carte car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **{self.client.command_prefix}start**)")
             else:
                 embed = discord.Embed(title="Bienvenue dans le menu d'édition de ta carte", description=ctx.author.mention)
                 embed.add_field(name=":one: Editer la section 'à propos'", value="** **", inline=False)
@@ -132,13 +132,13 @@ class Others(commands.Cog):
         author_values_2 = cursor.fetchone()
         if author_values_2 != None:
             is_afk = author_values_2[4]
-            if message and not message.content.startswith("+afk") and message.author.bot == False and is_afk != "None":
+            if message and not message.content.startswith(f"{self.client.command_prefix}afk") and message.author.bot == False and is_afk != "None":
                 updated_user = ("None", f"{message.author.id}",)
                 cursor.execute('UPDATE tt_iso_card SET afk = ? WHERE user_id = ?', updated_user)
                 connection.commit()
                 await message.channel.send(f"{message.author.mention} Tu es de retour ! Ton statut AFK a donc été désactivé.", delete_after=10)
 
-        if message and not message.content.startswith("+afk") and not message.content.startswith("+card") and message.author.bot == False:
+        if message and not message.content.startswith(f"{self.client.command_prefix}afk") and not message.content.startswith(f"{self.client.command_prefix}card") and message.author.bot == False:
             for user in message.mentions:
                 member_id = (f"{user.id}",)
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)

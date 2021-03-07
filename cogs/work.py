@@ -17,10 +17,10 @@ class Others(commands.Cog):
         cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', author_id)
         author_values = cursor.fetchone()
         if author_values == None:
-            await ctx.send(f"{ctx.author.mention} Tu ne peux pas travailler car tu ne t'es pas inscrit•e à l'aventure ISO land ! (Pour qu'elle inscrive : **+start**)")
+            await ctx.send(f"{ctx.author.mention} Tu ne peux pas travailler car tu ne t'es pas inscrit•e à l'aventure ISO land ! (Pour qu'elle inscrive : **{self.client.command_prefix}start**)")
         else:
             argent_de_author = author_values[5]
-            new_argent_author = argent_de_author + random.randint(x, y)
+            new_argent_author = argent_de_author + random.randint(10, 100)
             updated_author = (f"{new_argent_author}", f"{ctx.author.id}",)
             cursor.execute('UPDATE tt_iso_card SET dailies = ? WHERE user_id = ?', updated_author)
             connection.commit()

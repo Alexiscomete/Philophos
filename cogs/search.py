@@ -11,7 +11,7 @@ class Others(commands.Cog):
         espace = " "
         search_mc = ctx.message.content.split(" ")
         if len(search_mc) == 1 or len(search_mc) == 2:
-            await ctx.send("N'oublie pas d'arguments ! (Plus d'informations : **+help search**)")
+            await ctx.send(f"N'oublie pas d'arguments ! (Plus d'informations : **{self.client.command_prefix}help search**)")
         else:
             async with ctx.channel.typing():
                 if search_mc[1] == "uuid" or search_mc[1] == "pseudo":

@@ -25,7 +25,7 @@ class Others(commands.Cog):
         if arg == None:
             nombre_de_commandes_seen, nb_commands = 0, 0
             embed = discord.Embed(title=":information_source: Aide des commandes invoquée.", color=0x7f00ff)
-            embed.add_field(name="Afficher la liste des commandes d'un groupe :", value="```+help [groupe]```", inline=False)
+            embed.add_field(name="Afficher la liste des commandes d'un groupe :", value=f"```{self.client.command_prefix}help [groupe]```", inline=False)
             for key in json_object_nm['main_help_command']:
                 for element in json_object_nm['main_help_command'][str(key)]:
                     nb_commands += 1
@@ -58,7 +58,7 @@ class Others(commands.Cog):
                 embed.add_field(name="Syntaxe(s) :", value="```" + str(json_object_nm['help_commands'][str(arg)][1]) + "```", inline=False)
                 if len(json_object_nm['help_commands'][str(arg)]) == 3:
                     embed.add_field(name="Exemple(s) :", value="```" + str(json_object_nm['help_commands'][str(arg)][2]) + "```", inline=False)
-                embed.set_footer(text=f"N'oublie pas le préfixe du bot avant chaque commande, qui est : +")
+                embed.set_footer(text=f"N'oublie pas le préfixe du bot avant chaque commande, qui est : {self.client.command_prefix}")
                 help_help_command = await ctx.send(embed=embed)
                 if arg == "help" or arg == "h" or arg == "aide":
                     await asyncio.sleep(10)
@@ -74,10 +74,10 @@ class Others(commands.Cog):
                 test = command_groups[test]
                 for element in json_object_nm['main_help_command'][str(test)]:
                     commands_listing = str(commands_listing) + "\n" + str(element)
-                commands_listing = "```" + str(commands_listing) + "```" + "\n\nTu peux obtenir de l'aide sur une commande en faisant **+help [commande]** !"
+                commands_listing = "```" + str(commands_listing) + "```" + f"\n\nTu peux obtenir de l'aide sur une commande en faisant **{self.client.command_prefix}help [commande]** !"
                 await ctx.send(commands_listing)
             else:
-                await ctx.send(f"{ctx.author.mention} L'aide ou le groupe que tu recherches n'existe pas... ré-essaie :wink:\nPour voir la liste des groupes : **+help**")
+                await ctx.send(f"{ctx.author.mention} L'aide ou le groupe que tu recherches n'existe pas... ré-essaie :wink:\nPour voir la liste des groupes : **{self.client.command_prefix}help**")
 
 def setup(client):
     client.add_cog(Others(client))

@@ -16,7 +16,7 @@ class Others(commands.Cog):
         member_id = (f"{ctx.author.id}",)
         cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
         if cursor.fetchone() == None:
-            await ctx.send("Tu ne peux pas récupérer ton argent quotidien car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **+start**)")
+            await ctx.send(f"Tu ne peux pas récupérer ton argent quotidien car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **{self.client.command_prefix}start**)")
             ctx.command.reset_cooldown(ctx)
         else:
             cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)

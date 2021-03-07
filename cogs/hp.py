@@ -19,10 +19,14 @@ class Others(commands.Cog):
                 s = s[:l-3*i] + " " + s[l-3*i:]
             return s
 
-        API_KEY_HYPIXEL = "c507846f-dae0-4adf-8cc0-cada20275f2d"
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+
+        API_KEY_HYPIXEL = json_object_nm['token']['hypixel']
         hp_hypixel = ctx.message.content.split(" ")
         if len(hp_hypixel) == 1:
-            await ctx.send(f"N'oublie pas d'arguments ! Plus d'infos : +help hp")
+            await ctx.send(f"N'oublie pas d'arguments ! Plus d'infos : {self.client.command_prefix}help hp")
         else:
             if hp_hypixel[1] == "stats":
                 try:

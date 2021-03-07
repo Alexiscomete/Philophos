@@ -15,7 +15,7 @@ class Others(commands.Cog):
         wikipedia_msg = ctx.message.content.split(" ")
         espace, wikicontent_elements, bs_n, n, numbers = " ", [], "\n", 0, [':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:']
         if len(wikipedia_msg) == 1:
-            await ctx.send(f"{ctx.author.mention} N'oublie pas de spécifier un sujet à rechercher ! (Plus d'infos : **+help wikipedia**)")
+            await ctx.send(f"{ctx.author.mention} N'oublie pas de spécifier un sujet à rechercher ! (Plus d'infos : **{self.client.command_prefix}help wikipedia**)")
         else:
             if wikipedia_msg[1] == "random":
                 async with ctx.channel.typing():

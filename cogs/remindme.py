@@ -9,7 +9,7 @@ class Others(commands.Cog):
     @commands.command()
     async def remindme(self, ctx, *, time = None):
         if time == None:
-            await ctx.send(f"{ctx.author.mention} S'il te plaît, spécifie une durée pour ton rappel. (Plus d'infos : **+help remindme**)")
+            await ctx.send(f"{ctx.author.mention} S'il te plaît, spécifie une durée pour ton rappel. (Plus d'infos : **{self.client.command_prefix}help remindme**)")
         else:
             seconds, mef_time = 0, []
             arg = time.split(" / ")
