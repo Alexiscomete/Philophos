@@ -5,3 +5,5 @@ Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous p
 **Comment l'inviter ?**
 
 https://iso-land.org/amanager
+
+**Yo**
