@@ -45,7 +45,7 @@ class Others(commands.Cog):
                             embed = discord.Embed(title="Classement des points de réputation", description="** **")
                             m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
                             counter_rep += 1
-                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **+start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **{self.client.command_prefix}start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
 
         elif top == "daily":
@@ -84,7 +84,7 @@ class Others(commands.Cog):
                             embed = discord.Embed(title="Classement des crédits", description="** **")
                             m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
                             counter_rep += 1
-                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **+start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **{self.client.command_prefix}start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
         
         elif top == "exp":
@@ -124,7 +124,7 @@ class Others(commands.Cog):
                             embed = discord.Embed(title="Classement des points d'expérience", description="** **")
                             m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
                             counter_rep += 1
-                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **+start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **{self.client.command_prefix}start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
 
         elif top == "level":
@@ -164,11 +164,11 @@ class Others(commands.Cog):
                             embed = discord.Embed(title="Classement des niveaux", description="** **")
                             m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
                             counter_rep += 1
-                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **+start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                    embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **{self.client.command_prefix}start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
 
         else:
-            await ctx.send(f"{ctx.author.mention} Ce classement n'existe pas... Tu peux afficher tous les classements existants avec **+help top** !")
+            await ctx.send(f"{ctx.author.mention} Ce classement n'existe pas... Tu peux afficher tous les classements existants avec **{self.client.command_prefix}help top** !")
 
         connection.close()
 

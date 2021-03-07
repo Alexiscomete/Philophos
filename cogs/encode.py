@@ -10,7 +10,7 @@ class Others(commands.Cog):
     async def encode(self, ctx, service = None, *, arg = None):
         s_slash = "/"
         if service == None or arg == None:
-            await ctx.send("N'oublie pas un argument ! (Plus d'infos : **+help encode**)")
+            await ctx.send(f"N'oublie pas un argument ! (Plus d'infos : **{self.client.command_prefix}help encode**)")
         else:
             services = ['binary', 'base64']
             if service in services:

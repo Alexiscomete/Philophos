@@ -74,7 +74,7 @@ class Others(commands.Cog):
                 elif "august" in mention_date.lower():
                     mention_time = "Bonnes vacances d'été ! " + str(mention_time)
 
-                embed = discord.Embed(title=f"{mention_time} ! :grin:", description=f"Mon préfixe est **+** | **+help** pour plus d'infos !", color=0xf5900b)
+                embed = discord.Embed(title=f"{mention_time} ! :grin:", description=f"Mon préfixe est **{self.client.command_prefix}** | **{self.client.command_prefix}help** pour plus d'infos !", color=0xf5900b)
                 embed.add_field(name="** **", value="Tu recontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
                 await message.channel.send(embed=embed)
 

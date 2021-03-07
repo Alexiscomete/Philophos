@@ -8,7 +8,7 @@ class Others(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot == False and message.content.startswith("+8ball"):
+        if message.author.bot == False and message.content.startswith(f"{self.client.command_prefix}8ball"):
             eight_ball = ["Oui !", "Non.", "Problablement.", "Probablement pas.", "Je ne sais pas..."]
             await message.channel.send(random.choice(eight_ball))
 

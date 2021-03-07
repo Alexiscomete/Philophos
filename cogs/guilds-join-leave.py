@@ -1,4 +1,4 @@
-import discord
+import discord, sqlite3
 from discord.ext import commands
 
 class Others(commands.Cog):
@@ -8,6 +8,13 @@ class Others(commands.Cog):
     # A chaque fois que le bot rejoint un serveur
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
+        connection = sqlite3.connect("iso_card.db")
+        cursor = connection.cursor()
+        new_server = (guild.id, "+")
+        cursor.execute('INSERT INTO prefixes VALUES(?, ?)', new_server)
+        connection.commit()
+        connection.close()
+
         channel = self.client.get_channel(764181117636444230) # In "news-bot" channel
         embed = discord.Embed(title=f"J'ai rejoint un serveur ! :D", description=guild.name)
         embed.set_thumbnail(url=guild.icon_url)

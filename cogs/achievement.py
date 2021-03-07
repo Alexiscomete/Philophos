@@ -7,11 +7,11 @@ class Others(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def achievement(self, ctx, *, achievement):
+    async def achievement(self, ctx, *, achievement = None):
         espace_web = "%20"
         achievement_l = achievement.split(" ")
         if achievement == None:
-            await ctx.send(f"N'oublie pas d'arguments ! (numéro de la couleur, puis message : pour plus d'aide => **+help achievement)**")
+            await ctx.send(f"N'oublie pas d'arguments ! (numéro de la couleur, puis message : pour plus d'aide => **{self.client.command_prefix}help achievement)**")
         else:
             try:
                 color = int(achievement_l[0])
@@ -21,7 +21,7 @@ class Others(commands.Cog):
                 message_sent = achievement
             message_sent = message_sent.replace("?", "")
             if color < 1 or color > 39:
-                await ctx.send(f"Le numéro de la couleur entrée n'est pas valide ! Il doit être compris entre 1 et 39. (Si tu veux voir la liste des numéros de couleur : **+help achievement**)")
+                await ctx.send(f"Le numéro de la couleur entrée n'est pas valide ! Il doit être compris entre 1 et 39. (Si tu veux voir la liste des numéros de couleur : **{self.client.command_prefix}help achievement**)")
             else:
                 await ctx.send(f"https://minecraftskinstealer.com/achievement/{color}/Achievement%20get!/{message_sent}")
 

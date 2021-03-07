@@ -40,7 +40,7 @@ class Others(commands.Cog):
                 member_id = (f"{member.id}",)
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 if cursor.fetchone() == None:
-                    await ctx.send(f"Désolé {ctx.author.mention}, mais la personne avec qui tu essaies de donner un point de réputation ne s'est pas inscrite à l'aventure ISO land... Tu peux, néanmoins, aller lui en parler, et lui dire que la commande pour commencer l'aventure est **+start** ! :wink:")
+                    await ctx.send(f"Désolé {ctx.author.mention}, mais la personne avec qui tu essaies de donner un point de réputation ne s'est pas inscrite à l'aventure ISO land... Tu peux, néanmoins, aller lui en parler, et lui dire que la commande pour commencer l'aventure est **{self.client.command_prefix}start** ! :wink:")
                     ctx.command.reset_cooldown(ctx)
                 else:
                     cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)

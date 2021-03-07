@@ -28,7 +28,7 @@ class Others(commands.Cog):
                     cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', author_id)
                     author_values = cursor.fetchone()
                     if member_values == None:
-                        await ctx.send(f"{ctx.author.mention} Tu ne peux pas donner d'argent à cette personne car elle ne s'est pas inscrite à l'aventure ISO land ! (Pour qu'elle inscrive : **+start**)")
+                        await ctx.send(f"{ctx.author.mention} Tu ne peux pas donner d'argent à cette personne car elle ne s'est pas inscrite à l'aventure ISO land ! (Pour qu'elle inscrive : **{self.client.command_prefix}start**)")
                     else:
                         argent_de_author = author_values[5]
                         if argent > argent_de_author:
