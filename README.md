@@ -2,9 +2,7 @@
 
 Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous pouvez vous divertir !
 
-[//]: <> (Le .webp marche pas rip \(cette ligne est un commentaire\))
-
-<img src="http://img.iso-land.org/amanager/small-logo.png"/>
+<img src="http://img.iso-land.org/amanager/animated-logo.gif"/>
 
 ___
 
