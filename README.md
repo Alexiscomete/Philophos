@@ -2,6 +2,8 @@
 
 Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous pouvez vous divertir !
 
+[//]: <> (Le .webp marche pas rip \(cette ligne est un commentaire\))
+
 <img src="logo.webp"/>
 
 ___
@@ -18,9 +20,9 @@ Vous trouverez [ici](https://amanagerx.iso-land.org/) la documentation du bot.
 
 ### Site web :
 
-Amanager est un projet dépendant de [isoland](https://iso-land.org). 
+Amanager est un projet dépendant de [ISO Land](https://iso-land.org). 
 
-[Cliquez pour rejoindre nôtre serveur discord.](https://iso-land.org/discord)
+[Cliquez pour rejoindre notre serveur Discord.](https://iso-land.org/discord).
 
 ## Commandes : 
 
