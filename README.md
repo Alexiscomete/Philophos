@@ -4,7 +4,7 @@ Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous p
 
 [//]: <> (Le .webp marche pas rip \(cette ligne est un commentaire\))
 
-<img src="logo.webp"/>
+<img src="http://img.iso-land.org/amanager/logo.png"/>
 
 ___
 
