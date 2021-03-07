@@ -78,7 +78,7 @@ class Others(commands.Cog):
                 embed.add_field(name="Nombre de bans depuis une minute :", value=watchdog_lastminute, inline=False)
                 embed.add_field(name="Nombre de bans/jour par le staff :", value=staff_daily, inline=False)
                 embed.add_field(name="Nombre de bans/jour automatiques :", value=watchdog_daily, inline=False)
-                embed.add_field(name="Total des bans du staff :", value=staff_total, inline=False)
+                embed.add_field(name="Total des bans émis par le staff :", value=staff_total, inline=False)
                 embed.add_field(name="Total des bans automatiques :", value=watchdog_total, inline=False)
                 embed.add_field(name="Total de bans comptabilisés :", value=total_bans, inline=False)                    
                 await ctx.send(embed=embed)
