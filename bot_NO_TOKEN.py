@@ -1,5 +1,13 @@
-import discord, os, json
+import discord, os, json, sqlite3
 from discord.ext import commands
+
+#def get_prefix(bot, message):
+#    connection = sqlite3.connect("iso_card.db")
+#    cursor = connection.cursor()
+#    server_id = (f"{message.guild_id}",)
+#    cursor.execute('SELECT * FROM prefixes WHERE server_id = ?', server_id)
+#    server_values = cursor.fetchone()
+#    return server_values[1]
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '+', intents=intents)
@@ -11,13 +19,6 @@ async def on_command_error(ctx, error):
         a_file = open("no-move.json", "r")
         json_object_nm = json.load(a_file)
         a_file.close()
-
-        #s = int(error.retry_after)
-        #hours = s // 3600 
-        #s = s - (hours * 3600)
-        #minutes = s // 60
-        #seconds = s - (minutes * 60)
-
         phrase_cooldown = json_object_nm['phrase_cooldown']
         await ctx.send(f"{ctx.author.mention} {phrase_cooldown}", delete_after=10)
         await ctx.message.delete()
