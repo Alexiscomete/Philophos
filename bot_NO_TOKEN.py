@@ -1,13 +1,14 @@
-import discord, os, json, sqlite3
+import discord, os, json, sqlite3, json
 from discord.ext import commands
 
-#def get_prefix(bot, message):
-#    connection = sqlite3.connect("iso_card.db")
-#    cursor = connection.cursor()
-#    server_id = (f"{message.guild_id}",)
-#    cursor.execute('SELECT * FROM prefixes WHERE server_id = ?', server_id)
-#    server_values = cursor.fetchone()
-#    return server_values[1]
+def get_prefix(bot, message):
+    connection = sqlite3.connect("iso_card.db")
+    cursor = connection.cursor()
+    server_id = (f"{message.guild.id}",)
+    cursor.execute('SELECT * FROM prefixes WHERE server_id = ?', server_id)
+    server_values = cursor.fetchone()
+    prefix = str(server_values[1])
+    return prefix
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '+', intents=intents)
@@ -54,4 +55,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-client.run("X")
+client.run('X')
