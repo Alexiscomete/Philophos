@@ -111,4 +111,4 @@ Amanager est un projet dépendant de [ISO Land](https://iso-land.org).
 * Give
 
 ### Remérciements :
-* Remérciments
+* Remerciments
