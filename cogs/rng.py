@@ -11,8 +11,11 @@ class Others(commands.Cog):
         if nb1 == None or nb2 == None:
             nb1, nb2 = 0, 100
 
+        n_max = 4294967296
         if nb1 > nb2:
             await ctx.send(f"{ctx.author.mention} Le nombre 1 est plus grand que le nombre 2... relance la commande en faisant en sorte que le nombre 1 soit **plus petit** que le nombre 2.")
+        elif nb2 > n_max:
+            await ctx.send(f"{ctx.author.mention} L'intervalle entrée est trop grande, la limite est de {n_max} !")
         else:
             random_nb = random.randint(nb1, nb2)
             embed = discord.Embed(title=f"Générateur de nombres aléatoires")
