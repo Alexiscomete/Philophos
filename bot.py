@@ -1,17 +1,15 @@
 import discord, os, json, sqlite3, json
 from discord.ext import commands
 
-def get_prefix(bot, message):
-    connection = sqlite3.connect("iso_card.db")
-    cursor = connection.cursor()
-    server_id = (f"{message.guild.id}",)
-    cursor.execute('SELECT * FROM prefixes WHERE server_id = ?', server_id)
-    server_values = cursor.fetchone()
-    prefix = str(server_values[1])
-    return prefix
+def get_token():
+    a_file = open("no-move.json", "r")
+    json_object_nm = json.load(a_file)
+    a_file.close()
+    token = str(json_object_nm['token']['bot'])
+    return token
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix = '+', intents=intents)
+client = commands.Bot(command_prefix='+', intents=intents)
 client.remove_command('help')
 
 @client.event
@@ -55,4 +53,4 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
 
-client.run('X')
+client.run(get_token())

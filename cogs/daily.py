@@ -8,7 +8,7 @@ class Others(commands.Cog):
         self.client = client
 
     @commands.command()
-    @commands.cooldown(1, 86400, commands.BucketType.member) #86400s = 24h
+    @commands.cooldown(1, 86400, commands.BucketType.user) #86400s = 24h
     async def daily(self, ctx):
         connection = sqlite3.connect("iso_card.db")
         cursor = connection.cursor()

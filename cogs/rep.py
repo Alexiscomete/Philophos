@@ -8,7 +8,7 @@ class Others(commands.Cog):
         self.client = client
 
     @commands.command()
-    @commands.cooldown(1, 21600, commands.BucketType.member) #21600s = 6h
+    @commands.cooldown(1, 21600, commands.BucketType.user) #21600s = 6h
     async def rep(self, ctx):
         connection = sqlite3.connect("iso_card.db")
         cursor = connection.cursor()

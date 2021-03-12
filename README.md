@@ -6,25 +6,25 @@ Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous p
 
 ___
 
-## Informations pratiques :
+## Informations pratiques
 
-### Invitation :
+### Invitation
 
 Pour inviter Amanager sur votre serveur discord, il suffit de cliquer [ici](https://iso-land.org/amanager)
 
-### Documentation :
+### Documentation
 
 Vous trouverez [ici](https://amanagerx.iso-land.org/) la documentation du bot.
 
-### Site web :
+### Site web
 
-Amanager est un projet dépendant de [ISO Land](https://iso-land.org). 
+Amanager est un projet créé par [ISO Land](https://iso-land.org). 
 
 [Cliquez pour rejoindre notre serveur Discord.](https://iso-land.org/discord).
 
-## Commandes : 
+## Commandes 
 
-*Voici une petite liste des commandes de amanager. Vous trouerez plus de détail dans la [documentation](https://amanagerx.iso-land.org)*
+*Voici une petite liste des commandes du bot Amanager. Vous trouverez plus de détails dans la [documentation](https://amanagerx.iso-land.org)*
 
 *Le préfix par défaut du bot est : '+'*
 

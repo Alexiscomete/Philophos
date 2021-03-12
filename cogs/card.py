@@ -1,4 +1,4 @@
-import discord, sqlite3, asyncio
+import discord, sqlite3, asyncio, json
 from discord.ext import commands
 
 class Others(commands.Cog):
@@ -25,6 +25,9 @@ class Others(commands.Cog):
             if member.bot == True:
                 await ctx.send(f"{ctx.author.mention} Les bots n'ont pas de carte... :wink:")
             if member.bot == False:
+                a_file = open("no-move.json", "r")
+                json_object_nm = json.load(a_file)
+                a_file.close()
                 member_id = (f"{member.id}",)
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 if cursor.fetchone() == None:
@@ -41,6 +44,8 @@ class Others(commands.Cog):
                     about_para = member_values[3]
                     afk_status = member_values[4]
                     daily = member_values[5]
+                    job = member_values[10]
+                    job_emoji = json_object_nm['jobs'][str(job)][2]
 
                     if about_para == "":
                         about_para = "Je suis un nouveau dans l'aventure d'ISO land !"
@@ -50,7 +55,9 @@ class Others(commands.Cog):
                         embed.add_field(name="Statut AFK", value=afk_status, inline=False)
                     embed.add_field(name="<:reputation_point:810240527941238835> Point(s) de réputation", value=rep_points, inline=True)
                     embed.add_field(name="<:aCoin:813464075249123339> Crédits", value=daily, inline=True)
+                    embed.add_field(name=f"{job_emoji} Travail (bêta)", value=job, inline=True)
                     embed.add_field(name=":trophy: Succès", value=archi_list, inline=False)
+                    embed.set_footer(text="Pour voir ton inventaire, fait +inventory !")
                     await ctx.send(embed=embed)
 
         if arg == "edit":

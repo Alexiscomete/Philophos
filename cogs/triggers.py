@@ -39,7 +39,8 @@ class Others(commands.Cog):
 # KONAMI CODE #
 ###############
 
-            if message.content.lower() == "up up down down left right left right b a":
+            konami_codes = ['up up down down left right left right b a', 'uuddlrlrba']
+            if message.content.lower() in konami_codes:
                 achievement = ":video_game:"
                 member_values_list = member_values[2]
                 if member_values != None and achievement not in member_values_list:
@@ -77,6 +78,18 @@ class Others(commands.Cog):
                 embed = discord.Embed(title=f"{mention_time} ! :grin:", description=f"Mon préfixe est **{self.client.command_prefix}** | **{self.client.command_prefix}help** pour plus d'infos !", color=0xf5900b)
                 embed.add_field(name="** **", value="Tu recontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
                 await message.channel.send(embed=embed)
+
+#################################
+# VÉRIFIE SI LA COMMANDE EXISTE #
+#################################
+
+            if message.content.startswith(self.client.command_prefix):
+                command = message.content.split(" ")[0].replace(self.client.command_prefix, "")
+                commands_list = json_object_nm['help_commands']
+                owner_commands_list = ['load', 'unload', 'restart']
+                if command not in commands_list:
+                    if command not in owner_commands_list:
+                        await message.channel.send(f"{message.author.mention} Désolé mais la commande que tu as entré n'existe pas... :wink: Si tu veux voir la liste, tu peux faire **{self.client.command_prefix}help** !")
 
 ##################################
 # STARBOARD - AJOUT DE RÉACTIONS #

@@ -8,7 +8,7 @@ class Others(commands.Cog):
 
     @commands.command()
     async def remerciements(self, ctx):
-        await ctx.send(":heart: Merci à **Cyanic** de m'avoir beaucoup donné d'idées et à **Kobalt** d'être le traducteur de Polonais.\nMerci également à **Kyle / X Æ A-12**, **Cyanic**, **itai**, **Freeloop**, **LProgead** et **Kobalt** d'avoir été, et le sont toujours, les testeurs de ce bot !")
+        await ctx.send(":heart: Merci à **Cyanic** de m'avoir beaucoup donné d'idées.\nMerci à **MAKI** d'avoir créé la photo de profil du serveur Discord.\nMerci également à **Kyle / X Æ A-12**, **Cyanic**, **itai**, **Freeloop**, **LProgead** et **Kobalt** d'avoir été, et le sont toujours, les testeurs de ce bot !")
 
 def setup(client):
     client.add_cog(Others(client))

@@ -13,8 +13,8 @@ class Others(commands.Cog):
         member_id = (f"{ctx.author.id}",)
         cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
         if cursor.fetchone() == None:
-            new_user = (ctx.author.id, 0, ":beginner:", "Je suis un nouveau dans l'aventure d'ISO land !", "None", 0, 0, 1, "no", 500)
-            cursor.execute('INSERT INTO tt_iso_card VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', new_user)
+            new_user = (ctx.author.id, 0, ":beginner:", "Je suis un nouveau dans l'aventure d'ISO land !", "None", 0, 0, 1, "no", 500, "Chômeur")
+            cursor.execute('INSERT INTO tt_iso_card VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', new_user)
             connection.commit()
             await ctx.send(f"Bienvenue {ctx.author.mention}, dans l'aventure ISO land !")
         else:
