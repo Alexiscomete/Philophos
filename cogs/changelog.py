@@ -22,10 +22,9 @@ class Others(commands.Cog):
                 await ctx.send(f"La version que tu as entré n'est pas valide. Pour voir la liste des versions : **{self.client.command_prefix}changelog**.")
             else:
                 cg = changelog_versions[f"{changelog_arg.lower()}"]
-                embed = discord.Embed(title=f"Changelog • {changelog_arg.lower()}", color=0x666666)
-                embed.add_field(name=cg['date'], value=cg['description'], inline=False)
+                embed = discord.Embed(title=f"Changelog • {changelog_arg.lower()}", description=cg['date'], color=0x666666)
                 embed.set_footer(text="Les changelogs sont disponibles grâce à mon API, disponible ici : https://iso-land.org/api/")
-                await ctx.send(embed=embed)
+                await ctx.send(embed=embed, content=cg['description'])
 
 def setup(client):
     client.add_cog(Others(client))

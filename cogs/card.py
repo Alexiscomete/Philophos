@@ -13,7 +13,6 @@ class Others(commands.Cog):
 
         connection = sqlite3.connect("iso_card.db")
         cursor = connection.cursor()
-        espace = " "
         if arg == None:
             member = ctx.author
         if arg != "edit" and arg != None:
@@ -30,21 +29,19 @@ class Others(commands.Cog):
                 a_file.close()
                 member_id = (f"{member.id}",)
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
-                if cursor.fetchone() == None:
+                member_values = cursor.fetchone()
+                if member_values == None:
                     if member == ctx.author:
                         await ctx.send(f"Tu ne peux pas afficher ta carte car tu n'as pas commencé l'aventure ISO land ! (Pour débuter, fait : **{self.client.command_prefix}start**)")
                     else:
                         await ctx.send(f"Tu ne peux pas afficher la carte de cette personne car elle ne s'est pas inscrite à l'aventure ISO land... (Elle peut débuter en faisant **{self.client.command_prefix}start**)")
                 else:
-                    cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
-                    member_values = cursor.fetchone()
-                    guild_name = "_" + str(ctx.guild.id)
                     rep_points = member_values[1] #member_values[0] = user_id
                     archi_list = member_values[2]
                     about_para = member_values[3]
                     afk_status = member_values[4]
                     daily = member_values[5]
-                    job = member_values[10]
+                    job = member_values[6]
                     job_emoji = json_object_nm['jobs'][str(job)][2]
 
                     if about_para == "":
@@ -53,11 +50,10 @@ class Others(commands.Cog):
                     embed.add_field(name="À propos", value=about_para, inline=False)
                     if afk_status != "None":
                         embed.add_field(name="Statut AFK", value=afk_status, inline=False)
-                    embed.add_field(name="<:reputation_point:810240527941238835> Point(s) de réputation", value=rep_points, inline=True)
-                    embed.add_field(name="<:aCoin:813464075249123339> Crédits", value=daily, inline=True)
+                    embed.add_field(name="<:0_reputation_point:822158196068188161> Point(s) de réputation", value=rep_points, inline=True)
+                    embed.add_field(name="<:aCoin:822427301488623620> Crédits", value=daily, inline=True)
                     embed.add_field(name=f"{job_emoji} Travail (bêta)", value=job, inline=True)
-                    embed.add_field(name=":trophy: Succès", value=archi_list, inline=False)
-                    embed.set_footer(text="Pour voir ton inventaire, fait +inventory !")
+                    embed.set_footer(text="➡️  Pour voir ton inventaire, fait +inventory !\n➡️  Pour voir tes succès, fait +achievement !")
                     await ctx.send(embed=embed)
 
         if arg == "edit":

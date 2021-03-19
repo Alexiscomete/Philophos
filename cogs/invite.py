@@ -15,7 +15,7 @@ class Others(commands.Cog):
             await ctx.message.delete()
             await ctx.author.send("Pour m'inviter sur ton serveur Discord, utilise ce lien : <https://discord.com/oauth2/authorize?client_id=760171813866700850&permissions=134605888&scope=bot>")                
         else:
-            await ctx.message.send(f"{ctx.author.mention} N'oublie pas l'argument ! (server ou bot)")
+            await ctx.message.send(f"{ctx.author.mention} N'oublie pas l'argument ! (Plus d'informations : **+help invite**)")
 
 def setup(client):
     client.add_cog(Others(client))

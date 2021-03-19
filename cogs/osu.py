@@ -7,16 +7,17 @@ class Others(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def osu(self, ctx, reason = None, *, arg = None):
+    async def osu(self, ctx, reason = None, arg = None, mode = None):
         a_file = open("no-move.json", "r")
         json_object_nm = json.load(a_file)
         a_file.close()
         osu_api_key = json_object_nm['token']['osu']
         if reason == None or arg == None:
-            await ctx.send(f"{ctx.author.mention} N'oublie pas d'arguments ! (**user** ou **beatmap**, plus d'infos avec **{self.client.command_prefix}help osu** !)")
+            await ctx.send(f"{ctx.author.mention} N'oublie pas d'arguments ! (plus d'infos avec **{self.client.command_prefix}help osu** !)")
         elif reason == "user":
             async with ctx.typing():
-                osu_user = requests.get(f"https://osu.ppy.sh/api/get_user?u={arg}&k={osu_api_key}").json()
+                if mode == None: mode = 0
+                osu_user = requests.get(f"https://osu.ppy.sh/api/get_user?u={arg}&m={mode}&k={osu_api_key}").json()
                 try:
                     osu_user = osu_user[0]
                 except:
@@ -30,9 +31,11 @@ class Others(commands.Cog):
                 country = osu_user['country']
                 accuracy = round(float(osu_user['accuracy']), 2)
                 level = round(float(osu_user['level']), 2)
+                mode = json_object_nm['osu']['mode'][str(mode)]
                 embed = discord.Embed(title=f"Profil osu! de {osu_user['username']}", description=osu_user['user_id'], color=0xff66aa)
                 embed.add_field(name="Date d'inscription", value=osu_user['join_date'], inline=True)
                 embed.add_field(name="Nombre de parties", value=osu_user['playcount'], inline=True)
+                embed.add_field(name="Mode de jeu", value=mode, inline=True)
                 embed.add_field(name="Localisation", value=f":flag_{country.lower()}: " + str(country), inline=True)
                 embed.add_field(name="Ranked score", value=osu_user['ranked_score'], inline=True)
                 embed.add_field(name="Total score", value=osu_user['total_score'], inline=True)

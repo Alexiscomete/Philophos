@@ -35,7 +35,7 @@ class Others(commands.Cog):
                             await ctx.send(f"{ctx.author.mention} Tu ne peux pas donner autant d'argent car tu n'en as pas assez sur ta carte !")
                         else:
                             if argent < 1:
-                                await ctx.send(f"{ctx.author.mention} Tu ne peux pas effectuer cette transaction car le montant est trop bas (minimum 1<:aCoin:813464075249123339>) !")
+                                await ctx.send(f"{ctx.author.mention} Tu ne peux pas effectuer cette transaction car le montant est trop bas (minimum 1<:aCoin:822427301488623620> ) !")
                             else:
                                 transac_give = await ctx.send(f"{ctx.author.mention} Es-tu sûr de vouloir effectuer cette transaction ?\nRéponds **oui** ou **non**, tu as 15 secondes.")
                                 try:
@@ -64,7 +64,7 @@ class Others(commands.Cog):
                                     connection.commit()
 
                                     await asyncio.sleep(2)
-                                    await transac_give.edit(embed=None, content=f"**Transaction** effectuée par : {ctx.author.mention}\ncréditeur : {member.mention}\nMontant : {argent_a_donner}<:aCoin:813464075249123339> (Montant total : {argent_a_donner + taxe}<:aCoin:813464075249123339>)\nTaxe : {taxe}<:aCoin:813464075249123339> (2%)")
+                                    await transac_give.edit(embed=None, content=f"**Transaction** effectuée par : {ctx.author.mention}\ncréditeur : {member.mention}\nMontant : {argent_a_donner}<:aCoin:822427301488623620>  (Montant total : {argent_a_donner + taxe}<:aCoin:822427301488623620> )\nTaxe : {taxe}<:aCoin:822427301488623620>  (2%)")
 
                                 else:
                                     await transac_give.edit(embed=None, content="Une erreur est survenue... ré-essaie ! :wink:")

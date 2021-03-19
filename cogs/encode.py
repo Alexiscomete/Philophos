@@ -21,13 +21,13 @@ class Others(commands.Cog):
                     elif service.lower() == services[1]:
                         encode_api = requests.get(f"https://some-random-api.ml/base64?encode={arg}").json()
                         encode_api = encode_api[str(service.lower())]
-                    #embed = discord.Embed(title=f"Encodeur texte vers {s_slash.join(services)}")
-                    #embed.add_field(name="Texte d'origine : ", value=arg, inline=False)
-                    #embed.add_field(name=f"Résultat en {service} :", value=str(encode_api), inline=False)
-                #try:
-                #    await ctx.send(embed=embed)
-                #except discord.errors.HTTPException:
-                #    await ctx.send("La conversion n'a pas pu être envoyé car elle contenait plus de 1023 caractères... ce qui est la limite dans un envoi d'embed !")
+                    embed = discord.Embed(title=f"Encodeur texte vers {s_slash.join(services)}")
+                    embed.add_field(name="Texte d'origine : ", value=arg, inline=False)
+                    embed.add_field(name=f"Résultat en {service} :", value=str(encode_api), inline=False)
+                try:
+                    await ctx.send(embed=embed)
+                except discord.errors.HTTPException:
+                    await ctx.send("La conversion n'a pas pu être envoyée car elle contenait plus de 1023 caractères... ce qui est la limite dans un envoi d'embed !")
             else:
                 await ctx.send("Veuillez entrer un type d'écriture valide !")
 

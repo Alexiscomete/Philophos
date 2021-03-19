@@ -20,7 +20,7 @@ class Others(commands.Cog):
             await ctx.send(f"{ctx.author.mention} Tu ne peux pas travailler car tu ne t'es pas inscrit à l'aventure ISO land ! (Pour qu'elle s'inscrive : **{self.client.command_prefix}start**)")
         else:
             argent_de_author = author_values[5]
-            job = str(author_values[10])
+            job = str(author_values[6])
             a_file = open("no-move.json", "r")
             json_object_nm = json.load(a_file)
             a_file.close()
@@ -37,7 +37,7 @@ class Others(commands.Cog):
             if job == "Chômeur":
                 await ctx.send(f"Tu es un chômeur {ctx.author.mention} ! Tu ne peux pas travailler pour l'instant... (mais bientôt :wink:)")
             else:
-                await ctx.send(f"> {job}\n{ctx.author.mention} Tu as bien travaillé aujourd'hui ! Ce qui te rapporte {argent_a_ajouter}<:aCoin:813464075249123339> !")
+                await ctx.send(f"> {job}\n{ctx.author.mention} Tu as bien travaillé aujourd'hui ! Ce qui te rapporte {argent_a_ajouter}<:aCoin:822427301488623620>  !")
 
 def setup(client):
     client.add_cog(Others(client))

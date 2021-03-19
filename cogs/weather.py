@@ -32,11 +32,13 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 achievement = "<a:sun:790561041532190771>"
                 member_values = cursor.fetchone()
-                member_values_list = member_values[2]
-                if member_values != None and achievement not in member_values_list:
-                    archi_list = str(member_values[2]) + f" {achievement}"
+                cursor.execute('SELECT * FROM achievements WHERE user_id = ?', member_id)
+                a_user = cursor.fetchone()
+                a_misc = a_user[1]
+                if member_values != None and achievement not in a_misc:
+                    archi_list = str(a_misc) + f" {achievement}"
                     updated_user = (f"{archi_list}", f"{ctx.author.id}",)
-                    cursor.execute('UPDATE tt_iso_card SET archi_list = ? WHERE user_id = ?', updated_user)
+                    cursor.execute('UPDATE achievements SET a_misc = ? WHERE user_id = ?', updated_user)
                     connection.commit()
                 connection.close()
             else:

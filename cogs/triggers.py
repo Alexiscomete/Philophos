@@ -1,4 +1,4 @@
-import discord, sqlite3, json, datetime, pytz
+import discord, sqlite3, json, datetime, pytz, requests
 from discord.ext import commands
 from datetime import datetime, date
 from pytz import timezone
@@ -11,27 +11,32 @@ class Others(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot == False:
-
+            a_file = open("no-move.json", "r")
+            json_object_nm = json.load(a_file)
+            a_file.close()
             connection = sqlite3.connect("iso_card.db")
             cursor = connection.cursor()
             member_id = (f"{message.author.id}",)
             cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
             member_values = cursor.fetchone()
-            a_file = open("no-move.json", "r")
-            json_object_nm = json.load(a_file)
-            a_file.close()
+            cursor.execute('SELECT * FROM achievements WHERE user_id = ?', member_id)
+            member_a = cursor.fetchone()
+            if member_values != None:
+                rep_points = member_values[1]
+                a_misc = member_a[1]
+                a_reppoints = member_a[2]
 
 ###########################
 # NEVER GONNA GIVE YOU UP #
 ###########################
 
+            archi_autres = json_object_nm['achievements']['autres']
             if message.content.lower() == "never gonna give you up":
-                achievement = ":notes:"
-                member_values_list = member_values[2]
-                if member_values != None and achievement not in member_values_list:
-                    archi_list = str(member_values[2]) + f" {achievement}"
+                achievement = archi_autres[1]
+                if member_values != None and achievement not in a_misc:
+                    archi_list = str(a_misc) + f" {achievement}"
                     updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE tt_iso_card SET archi_list = ? WHERE user_id = ?', updated_user)
+                    cursor.execute('UPDATE achievements SET a_misc = ? WHERE user_id = ?', updated_user)
                     connection.commit()
                 await message.channel.send(":notes: Never gonna let you down !")
 
@@ -41,12 +46,11 @@ class Others(commands.Cog):
 
             konami_codes = ['up up down down left right left right b a', 'uuddlrlrba']
             if message.content.lower() in konami_codes:
-                achievement = ":video_game:"
-                member_values_list = member_values[2]
-                if member_values != None and achievement not in member_values_list:
-                    archi_list = str(member_values[2]) + f" {achievement}"
+                achievement = archi_autres[2]
+                if member_values != None and achievement not in a_misc:
+                    archi_list = str(a_misc) + f" {achievement}"
                     updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE tt_iso_card SET archi_list = ? WHERE user_id = ?', updated_user)
+                    cursor.execute('UPDATE achievements SET a_misc = ? WHERE user_id = ?', updated_user)
                     connection.commit()
                 embed = discord.Embed(title=f"Le pouvoir de Konami a été RELACHÉ !!!", color=0xf8e604)
                 embed.add_field(name='Le cheat code a bien été activé.', value="** **", inline=False)
@@ -75,21 +79,90 @@ class Others(commands.Cog):
                 elif "august" in mention_date.lower():
                     mention_time = "Bonnes vacances d'été ! " + str(mention_time)
 
+                changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
+                changelog_list = list(changelog_versions['changelogs'])
+
                 embed = discord.Embed(title=f"{mention_time} ! :grin:", description=f"Mon préfixe est **{self.client.command_prefix}** | **{self.client.command_prefix}help** pour plus d'infos !", color=0xf5900b)
-                embed.add_field(name="** **", value="Tu recontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
+                embed.add_field(name="** **", value="Tu rencontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
+                embed.set_footer(text=f"v{changelog_list[-1]}")
                 await message.channel.send(embed=embed)
 
-#################################
-# VÉRIFIE SI LA COMMANDE EXISTE #
-#################################
+#########################
+# ACHIEVEMENTS (SUCCES) #
+#########################
 
-            if message.content.startswith(self.client.command_prefix):
-                command = message.content.split(" ")[0].replace(self.client.command_prefix, "")
-                commands_list = json_object_nm['help_commands']
-                owner_commands_list = ['load', 'unload', 'restart']
-                if command not in commands_list:
-                    if command not in owner_commands_list:
-                        await message.channel.send(f"{message.author.mention} Désolé mais la commande que tu as entré n'existe pas... :wink: Si tu veux voir la liste, tu peux faire **{self.client.command_prefix}help** !")
+            archi_rep = json_object_nm['achievements']['reputation']
+            if rep_points == 1:
+                achievement = archi_rep[0]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = achievement
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 10:
+                achievement = archi_rep[1]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 20:
+                achievement = archi_rep[2]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 50:
+                achievement = archi_rep[3]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 100:
+                achievement = archi_rep[4]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 500:
+                achievement = archi_rep[5]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 1000:
+                achievement = archi_rep[6]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+
+            elif rep_points == 5000:
+                achievement = archi_rep[7]
+                if member_values != None and achievement not in a_reppoints:
+                    archi_list = str(a_reppoints) + f" {achievement}"
+                    updated_user = (f"{archi_list}", f"{message.author.id}",)
+                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                    connection.commit()
+                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
 ##################################
 # STARBOARD - AJOUT DE RÉACTIONS #

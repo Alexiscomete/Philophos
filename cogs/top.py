@@ -8,7 +8,7 @@ class Others(commands.Cog):
 
     @commands.command()
     async def top(self, ctx, top = None):
-        m_list, bs_n, counter_rep = [], "\n", 1
+        m_list, bs_n, counter_rep, limite_max = [], "\n", 1, 10
         if top == "rep":
             async with ctx.typing():
                 connection = sqlite3.connect("iso_card.db")
@@ -17,7 +17,7 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 author_values = cursor.fetchone()
                 cursor.execute('SELECT * FROM tt_iso_card ORDER BY rep_points DESC')
-                values = cursor.fetchall()[0:19]
+                values = cursor.fetchall()[0:limite_max]
                 if author_values != None:
                     for element in values:
                         if int(element[1]) > 0:
@@ -35,9 +35,10 @@ class Others(commands.Cog):
                                     embed = discord.Embed(title="Classement des points de réputation", description="** **")
                                 m_list.append(f"#{counter_rep} **{member.name}** : {element[1]}")
                             else:
+                                embed = discord.Embed(title="Classement des points de réputation", description="** **")
                                 m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
                             counter_rep += 1
-                    embed.add_field(name=f"Ta position dans le classement est : **#{author_rank}** !\nAvec un total de **{author_rep}** point(s) de réputation !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                    embed.add_field(name=f"Ta position dans le classement est : **#{author_rank}** !\nAvec un total de **{element[1]}** point(s) de réputation !", value=f"\n{bs_n.join(m_list)}", inline=False)
                 else:
                     for element in values:
                         if int(element[1]) > 0:
@@ -56,7 +57,7 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 author_values = cursor.fetchone()
                 cursor.execute('SELECT * FROM tt_iso_card ORDER BY dailies DESC')
-                values = cursor.fetchall()[0:19]
+                values = cursor.fetchall()[0:limite_max]
                 if author_values != None:
                     for element in values:
                         if int(element[5]) > 0:
@@ -74,6 +75,7 @@ class Others(commands.Cog):
                                     embed = discord.Embed(title="Classement des crédits", description="** **")
                                 m_list.append(f"#{counter_rep} **{member.name}** : {element[5]}")
                             else:
+                                embed = discord.Embed(title="Classement des points de réputation", description="** **")
                                 m_list.append(f"#{counter_rep} {member.name} : {element[5]}")
                             counter_rep += 1
                     embed.add_field(name=f"Ta position dans le classement est : **#{author_rank}** !\nAvec un total de **{author_rep}** crédit(s) !", value=f"\n{bs_n.join(m_list)}", inline=False)
@@ -96,7 +98,7 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id)
                 author_values = cursor.fetchone()
                 cursor.execute('SELECT * FROM {} ORDER BY exp DESC'.format(guild_name))
-                values = cursor.fetchall()[0:19]
+                values = cursor.fetchall()[0:limite_max]
                 if author_values != None:
                     for element in values:
                         if int(element[1]) > 0:
@@ -136,7 +138,7 @@ class Others(commands.Cog):
                 cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id)
                 author_values = cursor.fetchone()
                 cursor.execute('SELECT * FROM {} ORDER BY level DESC'.format(guild_name))
-                values = cursor.fetchall()[0:19]
+                values = cursor.fetchall()[0:limite_max]
                 if author_values != None:
                     for element in values:
                         if int(element[2]) > 0:

@@ -28,8 +28,9 @@ class Others(commands.Cog):
                     await ctx.send(f"{ctx.author.mention} Renvoie la commande pour que l'activation de ton système d'XP s'effectue !")
                 elif member_values != None:
                     exp = member_values[1]
-                    level = member_values[2]
+                    level = int(member_values[2])
                     exp_goal = member_values[3]
+                    if level == 100: level = ":infinity:"
                     embed = discord.Embed(title=f"Expérience de {member.name}", description=member.mention, color=0xf9c62d)
                     embed.add_field(name=":arrow_right: XP", value=exp_goal, inline=True)
                     embed.add_field(name=":large_orange_diamond: XP", value=exp, inline=True)

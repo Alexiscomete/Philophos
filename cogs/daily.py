@@ -26,7 +26,7 @@ class Others(commands.Cog):
             cursor.execute('UPDATE tt_iso_card SET dailies = ? WHERE user_id = ?', updated_user)
             connection.commit()
 
-            await ctx.send(f"{ctx.author.mention} <:aCoin:813464075249123339> Tu as reçu ton argent quotidien ! (100 crédits)")
+            await ctx.send(f"{ctx.author.mention} <:aCoin:822427301488623620>  Tu as reçu ton argent quotidien ! (100 crédits)")
         connection.close()
 
 def setup(client):

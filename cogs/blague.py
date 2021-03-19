@@ -11,8 +11,7 @@ class Others(commands.Cog):
         a_file = open("no-move.json", "r")
         json_object_nm = json.load(a_file)
         a_file.close()
-        if ctx.message.content == f"{self.client.command_prefix}blague":
-            await ctx.send(random.choice(json_object_nm['blagues']))
+        await ctx.send(random.choice(json_object_nm['blagues']))
 
 def setup(client):
     client.add_cog(Others(client))

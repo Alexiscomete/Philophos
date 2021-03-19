@@ -10,7 +10,6 @@ class Others(commands.Cog):
     async def gif(self, ctx, *, keyword):
         await ctx.message.delete()
         async with ctx.channel.typing():
-            espace = " "
             rgif = TenGiphPy.Tenor(token='88JQLKP3WXAI')
             msg = rgif.random(keyword)
             embed = discord.Embed()
