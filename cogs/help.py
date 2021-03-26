@@ -52,6 +52,7 @@ class Others(commands.Cog):
 
 # Commandes "help" pour commandes
         else:
+            arg_bl = ["jv", "éco"]
             if arg in json_object_nm['help_commands']:
                 embed = discord.Embed(title=f":information_source: {arg} | Aide", color=0x00B2EE)
                 embed.add_field(name="A quoi sert cette commande ?", value=json_object_nm['help_commands'][str(arg)][0], inline=False)
@@ -64,11 +65,10 @@ class Others(commands.Cog):
                     await asyncio.sleep(10)
                     await help_help_command.edit(content="https://media.tenor.co/images/8c409e6f39acc1bd796e8031747f19ad/tenor.gif\nTu demandes de l'aide pour avoir une aide ? <:kappa:743778116849106946>", embed=None)
 
-            elif arg.lower() in command_groups_cut or arg.lower() == "jv":
-                if arg.lower() == "jv":
-                    h_com = "jeux-vidéos"
-                else:
-                    h_com = arg.lower()
+            elif arg.lower() in command_groups_cut or arg.lower() in arg_bl:
+                if arg.lower() == "jv": h_com = "jeux-vidéos"
+                elif arg.lower() == "éco": h_com = "économie"
+                else: h_com = arg.lower()
                 commands_listing = ""
                 test = command_groups_cut.index(str(h_com))
                 test = command_groups[test]

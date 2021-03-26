@@ -146,9 +146,9 @@ class Others(commands.Cog):
                 member_id = (f"{user.id}",)
                 cursor.execute('SELECT * FROM tt_iso_card WHERE user_id = ?', member_id)
                 user_afk_s = cursor.fetchone()
-                user_afk_s = user_afk_s[4]
-                if user_afk_s != "None":
-                    await message.channel.send(f"{message.author.mention} Désolé mais l'utilisateur ({user.name}) que tu as mentionné est actuellement en AFK. Voici le statut qu'il/elle a laissé :\n> {user_afk_s}")
+                #if user_afk_s[4] != None:
+                    #if user_afk_s[4] != "None":
+                        #await message.channel.send(f"{message.author.mention} Désolé mais l'utilisateur ({user.name}) que tu as mentionné est actuellement en AFK. Voici le statut qu'il/elle a laissé :\n> {user_afk_s}")
 
         connection.close()
 

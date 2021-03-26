@@ -10,7 +10,7 @@ class Others(commands.Cog):
     async def on_message(self, message):
         channel = self.client.get_channel(774688147199492137)
 
-        if message.author.bot == False: # ajouter une ligne/créer une table
+        if message.author.bot == False and message.author.id != 719639619330899999: # ajouter une ligne/créer une table
             connection = sqlite3.connect("levels.db") # pour un serveur qui
             cursor = connection.cursor() # n'est pas encore enregistré dans la BDD
             server_id = (f"{message.guild.id}",)
@@ -71,7 +71,7 @@ class Others(commands.Cog):
                         guild_name = "_" + str(message.guild.id)
                         ancien_level = level
                         level += 1
-                        up_message = up_message.replace("$$AUTHOR_MENTION$$", f"{str(message.author.mention)}").replace("$$A_LEVEL$$", f"{str(ancien_level)}").replace("$$N_LEVEL$$", f"{str(level)}")
+                        up_message = up_message.replace("$$AUTHOR_MENTION$$", f"{str(message.author.mention)}").replace("$$AUTHOR_NAME$$", message.author.name).replace("$$A_LEVEL$$", f"{str(ancien_level)}").replace("$$N_LEVEL$$", f"{str(level)}")
                         updated_level = (f"{level}", f"{message.author.id}",)
                         cursor.execute('UPDATE {} SET level = ? WHERE user_id = ?'.format(guild_name), updated_level)
                         exp_goal = round((exp*1.01)+(ancien_level*120))

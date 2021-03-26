@@ -36,7 +36,7 @@ class Others(commands.Cog):
                 server_id = (f"{ctx.guild.id}",)
                 cursor.execute('SELECT * FROM levels WHERE server_id = ?', server_id)
                 server_values = cursor.fetchone()
-                up_message = str(server_values[1]).replace("$$AUTHOR_MENTION$$", f"{ctx.author.mention}").replace("$$N_LEVEL$$", "3").replace("$$A_LEVEL$$", "2")
+                up_message = str(server_values[1]).replace("$$AUTHOR_MENTION$$", f"{ctx.author.mention}").replace("$$AUTHOR_NAME$$", ctx.author.name).replace("$$N_LEVEL$$", "3").replace("$$A_LEVEL$$", "2")
                 is_activated_xp = server_values[2]
                 if is_activated_xp == "yes": is_activated_xp = ":white_check_mark:"
                 elif is_activated_xp == "no": is_activated_xp = ":x:"
@@ -296,7 +296,7 @@ class Others(commands.Cog):
                 elif choice == "3":
                     embed = discord.Embed(title="Menu de modification de l'up message.", description=ctx.author.mention)
                     embed.add_field(name="Entre ci-dessous l'up message qui sera envoyé.", value="Entre :x: pour quitter l'édition.", inline=False)
-                    embed.add_field(name="** **", value="```$$AUTHOR_MENTION$$ = mention du membre\n$$A_LEVEL$$ = ancien niveau\n$$N_LEVEL$$ = nouveau niveau```", inline=False)
+                    embed.add_field(name="** **", value="```$$AUTHOR_MENTION$$ = mention du membre\n$$AUTHOR_NAME$$ = nom du membre\n$$A_LEVEL$$ = ancien niveau\n$$N_LEVEL$$ = nouveau niveau```", inline=False)
                     await settings_edit.edit(embed=embed, content="> Tu as 1 minute pour répondre.")
 
                     try:
@@ -438,7 +438,6 @@ class Others(commands.Cog):
                     cursor.execute('UPDATE bienvenue_au_revoir SET goodbye_message = ? WHERE server_id = ?', updated_server)
                     connection.commit()
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le message pour indiquer le départ d'un membre a été actualisé !\n> {ancient_goodbye_message} ===> {goodbye_message}")
-
 
                 elif choice == "5":
 

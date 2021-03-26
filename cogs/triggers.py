@@ -90,79 +90,79 @@ class Others(commands.Cog):
 #########################
 # ACHIEVEMENTS (SUCCES) #
 #########################
+            if member_values != None:
+                archi_rep = json_object_nm['achievements']['reputation']
+                if rep_points == 1:
+                    achievement = archi_rep[0]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = achievement
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            archi_rep = json_object_nm['achievements']['reputation']
-            if rep_points == 1:
-                achievement = archi_rep[0]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = achievement
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 10:
+                    achievement = archi_rep[1]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 10:
-                achievement = archi_rep[1]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 20:
+                    achievement = archi_rep[2]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 20:
-                achievement = archi_rep[2]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 50:
+                    achievement = archi_rep[3]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 50:
-                achievement = archi_rep[3]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 100:
+                    achievement = archi_rep[4]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 100:
-                achievement = archi_rep[4]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 500:
+                    achievement = archi_rep[5]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 500:
-                achievement = archi_rep[5]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 1000:
+                    achievement = archi_rep[6]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
-            elif rep_points == 1000:
-                achievement = archi_rep[6]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
-
-            elif rep_points == 5000:
-                achievement = archi_rep[7]
-                if member_values != None and achievement not in a_reppoints:
-                    archi_list = str(a_reppoints) + f" {achievement}"
-                    updated_user = (f"{archi_list}", f"{message.author.id}",)
-                    cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
-                    connection.commit()
-                    await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
+                elif rep_points == 5000:
+                    achievement = archi_rep[7]
+                    if member_values != None and achievement not in a_reppoints:
+                        archi_list = str(a_reppoints) + f" {achievement}"
+                        updated_user = (f"{archi_list}", f"{message.author.id}",)
+                        cursor.execute('UPDATE achievements SET a_reppoints = ? WHERE user_id = ?', updated_user)
+                        connection.commit()
+                        await message.channel.send(f"{message.author.mention} Tu as obtenu un nouvel achievement ! (Avoir {rep_points} point de réputation)")
 
 ##################################
 # STARBOARD - AJOUT DE RÉACTIONS #
