@@ -1,20 +1,20 @@
 import discord, json, random
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def blague(self, ctx):
+    @cog_ext.cog_slash(name="blague", description="Envoyer une blague pour t'amuser !")
+    async def _blague(self, ctx):
         a_file = open("no-move.json", "r")
         json_object_nm = json.load(a_file)
         a_file.close()
         await ctx.send(random.choice(json_object_nm['blagues']))
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("blague")
+def teardown(bot):
+    bot.remove_cog("blague")

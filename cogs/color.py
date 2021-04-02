@@ -1,23 +1,27 @@
-import discord, random
+import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
+    @cog_ext.cog_slash(name="color", description="Afficher une couleur par rapport à son code héxadécimal !", options=[
+                create_option(
+                name="hexa",
+                description="code héxadécimal",
+                option_type=3,
+                required=True
+                )])
+    async def _color(self, ctx, hexa: str):
+        hexa = hexa.replace("#",'').upper()
+        embed = discord.Embed(title=f"Sélecteur de couleurs", description=f"Couleur recherchée : **#{hexa}**")
+        embed.set_image(url=f"https://www.colorhexa.com/{hexa}.png")
+        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def color(self, ctx, color = None):
-        if color == None:
-            await ctx.send(f"{ctx.author.mention} N'oublie pas le code héxadécimal !")
-        else:
-            hexsearch = color.replace("#",'').upper()
-            embed = discord.Embed(title=f"Sélecteur de couleurs", description=f"Couleur recherchée : **#{hexsearch}**")
-            embed.set_image(url=f"https://www.colorhexa.com/{hexsearch}.png")
-            await ctx.send(embed=embed)
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def setup(client):
-    client.add_cog(Others(client))
-
-def teardown(client):
-    client.remove_cog("8ball")
+def teardown(bot):
+    bot.remove_cog("color")

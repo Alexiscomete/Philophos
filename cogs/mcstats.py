@@ -1,23 +1,27 @@
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
+    @cog_ext.cog_slash(name="mcstats", description="Afficher le bandeau d'un serveur Minecraft !", options=[
+                create_option(
+                name="ip",
+                description="IP du serveur Minecraft",
+                option_type=3,
+                required=True
+                )])
+    async def _mcstats(self, ctx, ip: str):
+        embed = discord.Embed(title="Ping d'un serveur Minecraft")
+        embed.add_field(name=f"IP : {ip}", value="** **", inline=False)
+        embed.set_image(url=f"http://status.mclive.eu/{ip}/{ip}/25565/banner.png")
+        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def mcstats(self, ctx, ip = None):
-        if ip == None:
-            await ctx.send("N'oublie pas l'IP du serveur Minecraft !")
-        else:
-            embed = discord.Embed(title="Ping d'un serveur Minecraft")
-            embed.add_field(name=f"IP : {ip}", value="** **", inline=False)
-            embed.set_image(url=f"http://status.mclive.eu/{ip}/{ip}/25565/banner.png")
-            await ctx.send(embed=embed)
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def setup(client):
-    client.add_cog(Others(client))
-
-def teardown(client):
-    client.remove_cog("mcstats")
+def teardown(bot):
+    bot.remove_cog("mcstats")

@@ -1,20 +1,20 @@
 import discord, json, random
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def pcomp(self, ctx):
+    @cog_ext.cog_slash(name="pcomp", description="Envoyer une phrase complexe pour t'amuser !")
+    async def _pcomp(self, ctx):
         a_file = open("no-move.json", "r")
         json_object_nm = json.load(a_file)
         a_file.close()
         await ctx.send(random.choice(json_object_nm['pcomp']))
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("pcomp")
+def teardown(bot):
+    bot.remove_cog("pcomp")

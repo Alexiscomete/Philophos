@@ -1,22 +1,21 @@
 import discord, requests
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
+    @cog_ext.cog_slash(name="meme", description="Afficher un meme aléatoire tiré de subreddits !")
+    async def _meme(self, ctx):
+        meme_response = requests.get("https://meme-api.herokuapp.com/gimme").json()
+        embed = discord.Embed(title=f"Meme", description=meme_response["postLink"])
+        embed.add_field(name=f"Meme de {meme_response['author']}", value=f"Subreddit : **r/{meme_response['subreddit']}** | <:reddit_upvote:791346828012552202> {meme_response['ups']}", inline=False)
+        embed.set_image(url=meme_response['url'])
+        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def meme(self, ctx):
-        async with ctx.channel.typing():
-            meme_response = requests.get("https://meme-api.herokuapp.com/gimme").json()
-            embed = discord.Embed(title=f"Meme", description=meme_response["postLink"])
-            embed.add_field(name=f"Meme de {meme_response['author']}", value=f"Subreddit : **r/{meme_response['subreddit']}** | <:reddit_upvote:791346828012552202> {meme_response['ups']}", inline=False)
-            embed.set_image(url=meme_response['url'])
-        await ctx.send(embed=embed)  
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def setup(client):
-    client.add_cog(Others(client))
-
-def teardown(client):
-    client.remove_cog("meme")
+def teardown(bot):
+    bot.remove_cog("meme")

@@ -1,33 +1,43 @@
-import discord, TenGiphPy
+import discord, TenGiphPy, json
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def kill(self, ctx, member: discord.Member = None):
-        await ctx.message.delete()
+    @cog_ext.cog_slash(name="kill", description="Vouloir tuer quelqu'un", options=[
+                create_option(
+                name="membre",
+                description="Membre de discord que vous voulez tenter de tuer",
+                option_type=6,
+                required=False
+                )])
+    async def _kill(self, ctx, membre: discord.Member = None):
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        tengiphpy_api_key = json_object_nm['token']['tengiphpy']
         embed = discord.Embed()
-        rgif = TenGiphPy.Tenor(token='88JQLKP3WXAI')
-        kill_gif = rgif.random("kill anime")
-        if member == None:
-            embed.add_field(name=f"{ctx.author.name} a tenté de tuer quelqu'un !", value=f'{ctx.author.mention}', inline=False)
-            embed.set_image(url=kill_gif)
+        rgif = TenGiphPy.Tenor(token=tengiphpy_api_key)
+        dance_gif = rgif.random("kill anime")
+        if membre == None:
+            embed.add_field(name=f"{ctx.author.name} a faillit être tué(e) !", value=f'{ctx.author.mention}', inline=False)
+            embed.set_image(url=dance_gif)
             await ctx.send(embed=embed)
         else:
-            if str(member) == str(ctx.author):
-                embed.add_field(name=f"{ctx.author.name} a tenté de se tuer lui-même... !?", value=f"{ctx.author.mention}", inline=False)
-                embed.set_image(url=kill_gif)
+            if str(membre) == str(ctx.author):
+                embed.add_field(name=f"{ctx.author.name} a voulu se tuer lui(elle)-même... !?", value=f"{ctx.author.mention}", inline=False)
+                embed.set_image(url=dance_gif)
                 await ctx.send(embed=embed)
             else:
-                embed.add_field(name=f"{ctx.author.name} a tenté de tuer {member.name} !", value=f'{ctx.author.mention} {member.mention}', inline=False)
-                embed.set_image(url=kill_gif)
+                embed.add_field(name=f"{ctx.author.name} a tenté de tuer {membre.name} !", value=f'{ctx.author.mention} {membre.mention}', inline=False)
+                embed.set_image(url=dance_gif)
                 await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("kill")
+def teardown(bot):
+    bot.remove_cog("kill")

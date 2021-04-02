@@ -1,10 +1,10 @@
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
-
-    def __init__(self, client):
-        self.client = client
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -16,8 +16,8 @@ class Others(commands.Cog):
                     await message.add_reaction(emoji)
             await react_apod(message)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("automations")
+def teardown(bot):
+    bot.remove_cog("automations")

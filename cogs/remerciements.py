@@ -1,17 +1,21 @@
-import discord
+import discord, json
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
+    @cog_ext.cog_slash(name="remerciements", description="Afficher les remerciements liés à ce bot !")
+    async def _remerciements(self, ctx):
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        msg = json_object_nm['remerciements']
+        await ctx.send(msg)
 
-    @commands.command()
-    async def remerciements(self, ctx):
-        await ctx.send(":heart: Merci à **Cyanic** de m'avoir beaucoup donné d'idées.\nMerci à **MAKI** d'avoir créé la photo de profil du serveur Discord.\nMerci également à **Kyle / X Æ A-12**, **Cyanic**, **itai**, **Freeloop**, **LProgead** et **Kobalt** d'avoir été, et le sont toujours, les testeurs de ce bot !")
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def setup(client):
-    client.add_cog(Others(client))
-
-def teardown(client):
-    client.remove_cog("remerciements")
+def teardown(bot):
+    bot.remove_cog("remerciements")

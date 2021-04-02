@@ -1,17 +1,19 @@
 import discord, asyncio, sqlite3
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 from discord.ext.commands import has_permissions
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def settings(self, ctx):
+    guild_ids = [736689848626446396]
+    @cog_ext.cog_slash(guild_ids=guild_ids, name="settings", description="Afficher et modifier les paramètres du bot liés à ce serveur ! ⚠️ Nécessite la permission administrateur !")
+    async def _settings(self, ctx):
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
-        if ctx.message.author.guild_permissions.administrator or ctx.author.id == 307092817942020096:
+        if ctx.author.guild_permissions.administrator or ctx.author.id == 307092817942020096:
             embed = discord.Embed(title=f"Bienvenue dans le menu d'édition de ton serveur !", description=ctx.author.mention)
             embed.add_field(name=":one: Afficher les informations des paramètres du bot sur ce serveur.", value="** **", inline=False)
             embed.add_field(name=":two: Créer/Modifier ton starboard.", value="** **", inline=False)
@@ -21,7 +23,7 @@ class Others(commands.Cog):
             settings_edit = await ctx.send(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
             try:
-                msg = await self.client.wait_for("message", check=check, timeout=15)
+                msg = await self.bot.wait_for("message", check=check, timeout=15)
             except asyncio.TimeoutError:
                 await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
             await msg.delete()
@@ -31,6 +33,21 @@ class Others(commands.Cog):
                 await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Edition des paramètres du serveur annulée !")
 
             elif choice == "1":
+                embed = discord.Embed(title="Paramètres du serveur", description=ctx.author.mention)
+
+                connection = sqlite3.connect("starboard.db")
+                cursor = connection.cursor()
+                server_id = (f"{ctx.guild.id}",)
+                cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
+                server_values = cursor.fetchone()
+                connection.close()
+
+                if server_values != None:
+                    is_sb_activated = server_values[1]
+                    if is_sb_activated == "yes": is_sb_activated = ":white_check_mark:"
+                    elif is_sb_activated == "no": is_sb_activated = ":x:"
+                    embed.add_field(name="Starboard", value=f"Activé ? {is_sb_activated}", inline=False)
+
                 connection = sqlite3.connect("levels.db")
                 cursor = connection.cursor()
                 server_id = (f"{ctx.guild.id}",)
@@ -41,50 +58,31 @@ class Others(commands.Cog):
                 if is_activated_xp == "yes": is_activated_xp = ":white_check_mark:"
                 elif is_activated_xp == "no": is_activated_xp = ":x:"
                 is_activated_up_message = server_values[3]
-                if is_activated_up_message == "no": up_message = ":x:"
+                if is_activated_up_message == "no": is_activated_up_message = ":x:"
+                elif is_activated_up_message == "yes": is_activated_up_message = ":white_check_mark:"
                 up_message_channel = server_values[4]
                 if up_message_channel == "$$AUTO$$": up_message_channel = "Salon où le message est envoyé."
-
-                embed = discord.Embed(title="Paramètres du serveur", description=ctx.author.mention)
-
-                connection = sqlite3.connect("starboard.db")
-                cursor = connection.cursor()
-                server_id = (f"{ctx.guild.id}",)
-                cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
-                server_values = cursor.fetchone()
+                embed.add_field(name="Expérience & Niveaux", value=f"Activé ? {is_activated_xp}\nUP message activé ? {is_activated_up_message}\nUP message (exemple) : {up_message}\nSalon de l'up message : {up_message_channel}", inline=False)
+                connection.close()
 
                 if server_values != None:
-                    is_sb_activated = server_values[1]
-                    if is_sb_activated == "yes": is_sb_activated = ":white_check_mark:"
-                    elif is_sb_activated == "no": is_sb_activated = ":x:"
-                    embed.add_field(name="Starboard activé ?", value=is_sb_activated, inline=False)
-
-                connection = sqlite3.connect("iso_card.db")
-                cursor = connection.cursor()
-                cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
-                server_values = cursor.fetchone()
-
-                if server_values != None:
+                    connection = sqlite3.connect("iso_card.db")
+                    cursor = connection.cursor()
+                    cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
+                    server_values = cursor.fetchone()
+                    connection.close()
                     hello_activated = server_values[3]
                     if hello_activated == "yes": hello_activated = ":white_check_mark:"
                     elif hello_activated == "no": hello_activated = ":x:"
-                    embed.add_field(name="Envoi de messages d'arrivées de membres ?", value=hello_activated, inline=False)
                     goodbye_activated = server_values[4]
                     if goodbye_activated == "yes": goodbye_activated = ":white_check_mark:"
                     elif goodbye_activated == "no": goodbye_activated = ":x:"
-                    embed.add_field(name="Envoi de messages de départs de membres ?", value=goodbye_activated, inline=False)
                     hello_goodbye_channel = server_values[5]
-                    embed.add_field(name="Salon d'envoi des messages de départs et d'arrivées de membres", value=hello_goodbye_channel, inline=False)
                     hello_message = server_values[1].replace("$$AUTHOR_MENTION$$", f"{ctx.author.mention}").replace("$$AUTHOR_NAME$$", f"{ctx.author.name}")
                     goodbye_message = server_values[2].replace("$$AUTHOR_NAME$$", f"{ctx.author.name}")
-                    embed.add_field(name="Message d'arrivée (exemple)", value=hello_message, inline=False)
-                    embed.add_field(name="Message de départ (exemple)", value=goodbye_message, inline=False)
+                    embed.add_field(name="Bienvenue/Au revoir", value=f"Message de bienvenue activé ? {is_sb_activated}\nMessage de départs activé ? {goodbye_activated}\nSalon d'envoi des messages : {hello_goodbye_channel}\nMessage d'arrivée (exemple) : {hello_message}\nMessage de départ (exemple) : {goodbye_message}", inline=False)
 
-                embed.add_field(name="Système d'XP activé ?", value=is_activated_xp, inline=False)
-                embed.add_field(name="UP message (exemple)", value=up_message, inline=False)
-                embed.add_field(name="Salon de l'up message", value=up_message_channel, inline=False)
                 await settings_edit.edit(embed=embed, content=None)
-                connection.close()
 
             elif choice == "2":
                 connection = sqlite3.connect("starboard.db")
@@ -115,7 +113,7 @@ class Others(commands.Cog):
                 await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
                 try:
-                    msg = await self.client.wait_for("message", check=check, timeout=15)
+                    msg = await self.bot.wait_for("message", check=check, timeout=15)
                 except asyncio.TimeoutError:
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                 await msg.delete()
@@ -137,7 +135,7 @@ class Others(commands.Cog):
                     else:
                         is_activated = "❌"
                     if bound_channel != "Pas lié":
-                        bound_channel = "<#" + str(bound_channel) + ">"
+                        bound_channel = "<" + str(bound_channel) + ">"
                     embed = discord.Embed(title=f"Starboard du serveur {ctx.guild.name}", description=ctx.author.mention, color=0x301934)
                     embed.add_field(name="Le starboard est activé ?", value=is_activated, inline=False)
                     embed.add_field(name="Limite de réactions", value=reactions_limit, inline=True)
@@ -169,7 +167,7 @@ class Others(commands.Cog):
                     embed.add_field(name="Entre ci-dessous la limite pour laquelle un message sera envoyé dans le salon du starboard.", value="Entre :x: pour quitter l'édition.", inline=False)
                     await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=15)
+                        msg = await self.bot.wait_for("message", check=check, timeout=15)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -197,7 +195,7 @@ class Others(commands.Cog):
                     embed.add_field(name="LES EMOJIS PERSONNALISÉS DE SERVEURS DISCORD NE SONT PAS ENCORE IMPLÉMENTÉS !!!", value="** **", inline=False)
                     await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=15)
+                        msg = await self.bot.wait_for("message", check=check, timeout=15)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -215,12 +213,12 @@ class Others(commands.Cog):
                     cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                     ancien_salon = cursor.fetchone()[4]
                     if ancien_salon != "Pas lié":
-                        ancien_salon = "<#" + str(ancien_salon) + ">"
+                        ancien_salon = "<" + str(ancien_salon) + ">"
                     embed = discord.Embed(title="Menu de modification du salon starboard.", description=ctx.author.mention)
                     embed.add_field(name="Entre ci-dessous le salon où les messages du starboard seront envoyés.", value="Entre x pour quitter l'édition.", inline=False)
                     await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=15)
+                        msg = await self.bot.wait_for("message", check=check, timeout=15)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -228,13 +226,13 @@ class Others(commands.Cog):
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Edition du starboard annulée !")
                     else:
                         try:
-                            bound_channel = int(msg.content.replace("<#", "").replace(">", ""))
+                            bound_channel = int(msg.content.replace("<", "").replace(">", ""))
                         except ValueError:
                             await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le salon entré n'est pas valide... ré-essaie !")
                         updated_user = (f"{bound_channel}", f"{ctx.guild.id}",)
                         cursor.execute('UPDATE starboard_generals SET bound_channel = ? WHERE server_id = ?', updated_user)
                         connection.commit()
-                        await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le salon du starboard a bien été redéfini ! (<#{ancien_salon}> -> {msg.content})")
+                        await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le salon du starboard a bien été redéfini ! (<{ancien_salon}> -> {msg.content})")
 
                 else:
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le choix que tu as entré n'est pas valide... Ré-essaie !")
@@ -252,7 +250,7 @@ class Others(commands.Cog):
                 await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
                 try:
-                    msg = await self.client.wait_for("message", check=check, timeout=15)
+                    msg = await self.bot.wait_for("message", check=check, timeout=15)
                 except asyncio.TimeoutError:
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                 await msg.delete()
@@ -300,7 +298,7 @@ class Others(commands.Cog):
                     await settings_edit.edit(embed=embed, content="> Tu as 1 minute pour répondre.")
 
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=60)
+                        msg = await self.bot.wait_for("message", check=check, timeout=60)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -321,7 +319,7 @@ class Others(commands.Cog):
                     await settings_edit.edit(embed=embed, content="> Tu as 1 minute pour répondre.")
 
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=60)
+                        msg = await self.bot.wait_for("message", check=check, timeout=60)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -361,7 +359,7 @@ class Others(commands.Cog):
                 await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
                 try:
-                    msg = await self.client.wait_for("message", check=check, timeout=15)
+                    msg = await self.bot.wait_for("message", check=check, timeout=15)
                 except asyncio.TimeoutError:
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                 await msg.delete()
@@ -405,7 +403,7 @@ class Others(commands.Cog):
                     ancient_hello_message = server_values[1]
 
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=60)
+                        msg = await self.bot.wait_for("message", check=check, timeout=60)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -427,7 +425,7 @@ class Others(commands.Cog):
                     ancient_goodbye_message = server_values[2]
 
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=60)
+                        msg = await self.bot.wait_for("message", check=check, timeout=60)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -448,7 +446,7 @@ class Others(commands.Cog):
                     ancient_hello_goodbye_channel = server_values[5]
 
                     try:
-                        msg = await self.client.wait_for("message", check=check, timeout=60)
+                        msg = await self.bot.wait_for("message", check=check, timeout=60)
                     except asyncio.TimeoutError:
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
                     await msg.delete()
@@ -464,8 +462,8 @@ class Others(commands.Cog):
         else:
             await ctx.send(f"{ctx.author.mention} Tu n'as pas la permission de faire cela sur ce serveur :angry:")
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("settings")
+def teardown(bot):
+    bot.remove_cog("settings")

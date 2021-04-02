@@ -1,30 +1,43 @@
-import discord, TenGiphPy
+import discord, TenGiphPy, json
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def cookie(self, ctx, member: discord.Member = None):
-        await ctx.message.delete()
-        hello = ctx.message.content.split(" ")
+    @cog_ext.cog_slash(name="cookie", description="Donner un cookie à un membre !", options=[
+                create_option(
+                name="membre",
+                description="Membre de discord avec qui donner un cookie.",
+                option_type=6,
+                required=False
+                )])
+    async def _cookie(self, ctx, membre: discord.Member = None):
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        tengiphpy_api_key = json_object_nm['token']['tengiphpy']
         embed = discord.Embed()
-        rgif = TenGiphPy.Tenor(token='88JQLKP3WXAI')
-        cookie_gif = rgif.random("anime cookie")
-        if member == None:
+        rgif = TenGiphPy.Tenor(token=tengiphpy_api_key)
+        dance_gif = rgif.random("cookie anime")
+        if membre == None:
             embed.add_field(name=f"{ctx.author.name} mange un cookie !", value=f'{ctx.author.mention}', inline=False)
+            embed.set_image(url=dance_gif)
+            await ctx.send(embed=embed)
         else:
-            if str(member) == str(ctx.author):
+            if str(membre) == str(ctx.author):
                 embed.add_field(name=f"{ctx.author.name} s'est donné un cookie... !?", value=f"{ctx.author.mention}", inline=False)
+                embed.set_image(url=dance_gif)
+                await ctx.send(embed=embed)
             else:
-                embed.add_field(name=f"{ctx.author.name} a donné un cookie {member.name} !", value=f'{ctx.author.mention} {member.mention}', inline=False)
-        embed.set_image(url=cookie_gif)
-        await ctx.send(embed=embed)
+                embed.add_field(name=f"{ctx.author.name} a donné un cookie à {membre.name} !", value=f'{ctx.author.mention} {membre.mention}', inline=False)
+                embed.set_image(url=dance_gif)
+                await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("cookie")
+def teardown(bot):
+    bot.remove_cog("cookie")

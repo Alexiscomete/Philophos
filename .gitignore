@@ -9,3 +9,6 @@ levels.db
 starboard.db
 courbe de l'exp par rapport aux niveaux.xlsx
 ~$courbe de l'exp par rapport aux niveaux.xlsx
+unused_cogs/daily.py
+unused_cogs/rep.py
+unused_cogs/work.py

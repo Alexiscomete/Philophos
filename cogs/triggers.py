@@ -61,18 +61,18 @@ class Others(commands.Cog):
 # BOT PING #
 ############
 
-            bot_mentions = ['@Amanager#8727', '<@760171813866700850>', '<@!760171813866700850>']
+            bot_mentions = ['<@760171813866700850>', '<@!760171813866700850>']
             if message.content in bot_mentions:
                 mention_time = int(datetime.now(pytz.timezone('Europe/Paris')).strftime("%H"))
                 mention_date = date.today().strftime("%B %d, %Y")
                 if 7 <= mention_time <= 12:
-                    mention_time = "Bonjour"
+                    mention_time = "Bonjour ! :wave:"
                 elif 13 <= mention_time <= 19:
-                    mention_time = "Bon après-midi"
+                    mention_time = "Bon après-midi ! :sunglasses:"
                 elif 20 <= mention_time <= 23:
-                    mention_time = "Bonsoir"
+                    mention_time = "Bonsoir ! :yawning_face:"
                 elif 0 <= mention_time <= 6:
-                    mention_time = "Bonne nuit"
+                    mention_time = "Bonne nuit ! :sleeping:"
 
                 if "december" in mention_date.lower():
                     mention_time = "Oh! oh! oh! " + str(mention_time)
@@ -82,7 +82,7 @@ class Others(commands.Cog):
                 changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
                 changelog_list = list(changelog_versions['changelogs'])
 
-                embed = discord.Embed(title=f"{mention_time} ! :grin:", description=f"Mon préfixe est **{self.client.command_prefix}** | **{self.client.command_prefix}help** pour plus d'infos !", color=0xf5900b)
+                embed = discord.Embed(title=mention_time, description=f"Mon préfixe est **/** | **/help** pour plus d'infos !", color=0xf5900b)
                 embed.add_field(name="** **", value="Tu rencontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
                 embed.set_footer(text=f"v{changelog_list[-1]}")
                 await message.channel.send(embed=embed)
@@ -271,6 +271,44 @@ class Others(commands.Cog):
                 connection.commit()
 
         connection.close()
+
+#####################################
+# ARRIVÉE DE MEMBRES (personnalisé) #
+#####################################
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        connection = sqlite3.connect("iso_card.db")
+        cursor = connection.cursor()
+        server_id = (f"{member.guild.id}",)
+        cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
+        server_values = cursor.fetchone()
+        if server_values != None:
+            is_activated_hello = server_values[3]
+            if is_activated_hello == "yes":
+                id_channel = int(server_values[5].replace("<#", "").replace(">", ""))
+                message_to_send = server_values[1].replace("$$AUTHOR_MENTION$$", member.mention).replace("$$AUTHOR_NAME$$", member.name)
+                channel_to_send = self.client.get_channel(id_channel)
+                await channel_to_send.send(message_to_send)
+
+####################################
+# DÉPART DE MEMBRES (personnalisé) #
+####################################
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        connection = sqlite3.connect("iso_card.db")
+        cursor = connection.cursor()
+        server_id = (f"{member.guild.id}",)
+        cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
+        server_values = cursor.fetchone()
+        if server_values != None:
+            is_activated_goodbye = server_values[4]
+            if is_activated_goodbye == "yes":
+                id_channel = int(server_values[5].replace("<#", "").replace(">", ""))
+                message_to_send = server_values[2].replace("$$AUTHOR_NAME$$", member.name)
+                channel_to_send = self.client.get_channel(id_channel)
+                await channel_to_send.send(message_to_send)
 
 def setup(client):
     client.add_cog(Others(client))

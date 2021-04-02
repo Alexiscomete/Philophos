@@ -1,17 +1,51 @@
 import discord, asyncio, random, string
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def pwd(self, ctx):
+    @cog_ext.cog_slash(name="pwd", description="Générer un mot de passe aléatoire personnalisable, facilement et en toute sécurité !", options=[
+                create_option(
+                name="nombre_de_caractères",
+                description="Le nombre de caractères que contiendra le mot de passe (minimum 8 et maximum 128)",
+                option_type=4,
+                required=True
+                ),
+                create_option(
+                name="nombres_",
+                description="Y inclure des nombres ? (répondre oui ou non)",
+                option_type=3,
+                required=True,
+                choices=[
+                create_choice(
+                name="oui",
+                value="oui"
+                ),
+                create_choice(
+                name="non",
+                value="non"
+                )]
+                ),
+                create_option(
+                name="caractères_spéciaux_",
+                description="Y inclure des caractères spéciaux ? (répondre oui ou non)",
+                option_type=3,
+                required=True,
+                choices=[
+                create_choice(
+                name="oui",
+                value="oui"
+                ),
+                create_choice(
+                name="non",
+                value="non"
+                )]
+                )])
+    async def _pwd(self, ctx, nombre_de_caractères: int, nombres_: str, caractères_spéciaux_: str):
         espace = " "
-        pwd = ctx.message.content.split(" ")
-        def check(msg):
-            return msg.author == ctx.author and msg.channel == ctx.channel
         def password_gen(pwd_nb_caracteres, is_numbers, is_caracters):
             pas_espace = ""
             pwd_list = []
@@ -42,50 +76,17 @@ class Others(commands.Cog):
                             pwd_list.append(random.choice(list(string.ascii_uppercase)))
             password = pas_espace.join(pwd_list)
             return password
-        pwd_bot_message = await ctx.send(f"{ctx.author.mention} Bienvenue sur le générateur de mot de passe d'Amanager !")
-        await asyncio.sleep(2)
-        await pwd_bot_message.edit(content=f"{ctx.author.mention} Tu veux combien de caractères ? (entre 8 et 128)")
-        try:
-            msg = await self.client.wait_for("message", check=check, timeout=10)
-        except asyncio.TimeoutError:
-            await pwd_bot_message.edit(content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
-        try:
-            pwd_nb_caracteres = int(msg.content)
-        except ValueError:
-            await pwd_bot_message.edit(content=f"{ctx.author.mention} Vous n'avez pas entré de nombre...")
-        if pwd_nb_caracteres > 128 or pwd_nb_caracteres < 8:
-            await pwd_bot_message.edit(content=f"{ctx.author.mention} Votre nombre n'est pas valide... (Il est trop grand ou trop petit.)")
+        if nombre_de_caractères > 128 or nombre_de_caractères < 8:
+            await ctx.send(f"{ctx.author.mention} Le nombre que tu as entré n'est pas valide... (Il est trop grand ou trop petit.)")
         else:
-            await msg.delete()
-            await pwd_bot_message.edit(content=f"{ctx.author.mention} Veux-tu y inclure des chiffres ? (oui ou non)")
-            try:
-                msg = await self.client.wait_for("message", check=check, timeout=10)
-            except asyncio.TimeoutError:
-                await pwd_bot_message.edit(content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
-            if msg.content.lower() != "oui" and msg.content.lower() != "non":
-                await pwd_bot_message.edit(content="Vous n'avez pas entré de réponse valable... (oui OU non)")
-            elif msg.content.lower() == "oui" or msg.content.lower() == "non":
-                is_numbers = msg.content
-                await msg.delete()
-                await pwd_bot_message.edit(content=f"{ctx.author.mention} Veux-tu y inclure des caractères spéciaux ? (oui ou non)")
-                try:
-                    msg = await self.client.wait_for("message", check=check, timeout=10)
-                except asyncio.TimeoutError:
-                    await pwd_bot_message.edit(content=f"{ctx.author.mention} Tu as mis trop de temps pour répondre...")
-                if msg.content.lower() != "oui" and msg.content.lower() != "non":
-                    await pwd_bot_message.edit(content="Vous n'avez pas entré de réponse valable... (oui OU non)")
-                elif msg.content.lower() == "oui" or msg.content.lower() == "non":
-                    is_caracters = msg.content
-                    await msg.delete()
-                password = password_gen(pwd_nb_caracteres, is_numbers, is_caracters)
-                await ctx.message.delete()
-                await pwd_bot_message.edit(content=f"{ctx.author.mention} Ton mot de passe a été envoyé en MP !")
-                await ctx.author.send(f"Vous aviez demandé un mot de passe :\n\n```{password}```")
-                await asyncio.sleep(3)
-                await pwd_bot_message.delete()
+            password = password_gen(nombre_de_caractères, nombres_, caractères_spéciaux_)
+            pwd_end = await ctx.send(f"{ctx.author.mention} Ton mot de passe a été envoyé en MP !")
+            await ctx.author.send(f"Vous aviez demandé un mot de passe :\n\n```{password}```")
+            await asyncio.sleep(3)
+            await pwd_end.delete()
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("pwd")
+def teardown(bot):
+    bot.remove_cog("pwd")

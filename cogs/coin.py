@@ -1,13 +1,13 @@
 import discord, random, asyncio
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def coin(self, ctx):
+    @cog_ext.cog_slash(name="coin", description="Lancer une pièce pour faire un pile ou face !")
+    async def _coin(self, ctx):
         bot_message = await ctx.send("J'ai lancé la pièce.")
         await asyncio.sleep(1)
         if random.randint(1, 2) == 1:
@@ -15,8 +15,8 @@ class Others(commands.Cog):
         else:
             await bot_message.edit(content=f"{ctx.author.mention}, c'est face !")
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("coin")
+def teardown(bot):
+    bot.remove_cog("coin")

@@ -1,15 +1,12 @@
 import discord, sqlite3, random, asyncio, json
 from discord.ext import commands
 
-class Others(commands.Cog):
-
-    def __init__(self, client):
-        self.client = client
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        channel = self.client.get_channel(774688147199492137)
-
         if message.author.bot == False and message.author.id != 719639619330899999: # ajouter une ligne/créer une table
             connection = sqlite3.connect("levels.db") # pour un serveur qui
             cursor = connection.cursor() # n'est pas encore enregistré dans la BDD
@@ -82,7 +79,7 @@ class Others(commands.Cog):
                             if up_message_channel == "$$AUTO$$":
                                 await message.channel.send(up_message)
                             else:
-                                channel = self.client.get_channel(int(up_message_channel))
+                                channel = self.bot.get_channel(int(up_message_channel))
                                 await channel.send(up_message)
 
                     guild_name = "_" + str(message.guild.id)
@@ -95,8 +92,8 @@ class Others(commands.Cog):
 
             connection.close()
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("levels")
+def teardown(bot):
+    bot.remove_cog("levels")

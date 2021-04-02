@@ -1,33 +1,28 @@
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def avatar(self, ctx):
-        avatar = ctx.message.content.split(" ")
-        if len(avatar) != 1:
-            member = str(avatar[1]).replace("<@", "").replace(">", "").replace("!", "")
-            try:
-                member = await self.client.fetch_user(member)
-            except:
-                await ctx.send(f"La personne mentionnée n'a pas été retrouvée...")
-            member_name = member.name
-            member_mention = member.mention
-            member_avatar = member.avatar_url
-        else:
-            member_name = ctx.author.name
-            member_mention = ctx.author.mention
-            member_avatar = ctx.author.avatar_url
-        embed = discord.Embed(title=f"Avatar de {member_name}", description=member_mention)
-        embed.set_image(url=member_avatar)
+    @cog_ext.cog_slash(name="avatar", description="Afficher ta photo de profil, ou celle d'un utilisateur !", options=[
+                create_option(
+                name="membre",
+                description="Membre de discord à qui souhaiter un anniversaire",
+                option_type=6,
+                required=False
+                )]) 
+    async def _avatar(self, ctx, membre: discord.Member = None):
+        if membre == None:
+            membre = ctx.author
+        embed = discord.Embed(title=f"Avatar de {membre.name}", description=membre.mention)
+        embed.set_image(url=membre.avatar_url)
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("avatar")
+def teardown(bot):
+    bot.remove_cog("avatar")

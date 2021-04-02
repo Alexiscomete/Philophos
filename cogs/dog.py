@@ -1,21 +1,20 @@
 import discord, requests
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def dog(self, ctx):
+    @cog_ext.cog_slash(name="dog", description="Afficher une photo aléatoire de chien !")
+    async def _dog(self, ctx):
         animal_images = requests.get("https://random.dog/woof.json").json()
-        async with ctx.message.channel.typing():
-            embed = discord.Embed(title="Un chien sauvage apparaît !", description="Woof !")
-            embed.set_image(url=animal_images['url'])
+        embed = discord.Embed(title="Un chien sauvage apparaît !", description="Woof !")
+        embed.set_image(url=animal_images['url'])
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("dog")
+def teardown(bot):
+    bot.remove_cog("dog")

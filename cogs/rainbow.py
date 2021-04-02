@@ -1,28 +1,29 @@
 import discord, requests
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def rainbow(self, ctx, member: discord.Member = None):
-        async with ctx.typing():
-            if member != None:
-                author_name = member.name
-                author_mention = member.mention
-                author_avatar_url = str(member.avatar_url)
-            else:
-                author_name = ctx.author.name
-                author_mention = ctx.author.mention
-                author_avatar_url = ctx.author.avatar_url
-            embed = discord.Embed(title=f":rainbow: {author_name} est multicolore !", description=author_mention)
-            embed.set_image(url=f"https://some-random-api.ml/canvas/gay?avatar={str(author_avatar_url).replace('webp','png').replace('?size=1024','?size=4096')}")
+    @cog_ext.cog_slash(name="rainbow", description="Afficher ta photo de profil, ou celle d'un utilisateur avec un filtre arc-en-ciel !", options=[
+                create_option(
+                name="membre",
+                description="Choisis un utilisateur",
+                option_type=6,
+                required=False
+                )])
+    async def _rainbow(self, ctx, membre: discord.Member = None):
+        if membre == None:
+            membre = ctx.author
+        embed = discord.Embed(title=f":rainbow: {membre.name} est multicolore", description=membre.mention)
+        member_avatar_url = str(membre.avatar_url).replace('webp','png').replace('?size=1024','?size=4096')
+        embed.set_image(url=f'https://some-random-api.ml/canvas/gay?avatar={member_avatar_url}')
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("rainbow")
+def teardown(bot):
+    bot.remove_cog("rainbow")

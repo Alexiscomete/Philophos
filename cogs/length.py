@@ -1,19 +1,26 @@
-import discord
+import discord, json
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def length(self, ctx, *, texte):
+    @cog_ext.cog_slash(name="length", description="Compteur de caractères", options=[
+                create_option(
+                name="message",
+                description="Message avec lequel faire compter le nombre de caractères",
+                option_type=3,
+                required=True
+                )])
+    async def _length(self, ctx, message: str):
         embed = discord.Embed(title=f"Compteur de caractères")
-        embed.add_field(name="Nombre de caractères :", value=f"{len(list(str(texte)))}", inline=False)
+        embed.add_field(name="Nombre de caractères", value=len(list(message)), inline=False)
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("length")
+def teardown(bot):
+    bot.remove_cog("length")

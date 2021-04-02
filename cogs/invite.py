@@ -1,24 +1,22 @@
-import discord
+import discord, requests
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
+    @cog_ext.cog_slash(name="invite", description="Afficher les différents liens d'invitation !")
+    async def _invite(self, ctx):
+        embed = discord.Embed(title="Liens d'invitations")
+        embed.add_field(name="Si vous n'avez pas invité le bot sur votre serveur", value="[clique ici](https://iso-land.org/amanager)", inline=False)
+        embed.add_field(name="Si vous avez invité le bot avant le 26 mars 2021", value="[clique ici](https://iso-land.org/amanager-add_slash_commands)", inline=False)
+        embed.add_field(name="Le serveur support", value="[clique ici](https://discord.gg/WamZS7CExw)", inline=False)
+        await ctx.send(embed=embed)
 
-    @commands.command()
-    async def invite(self, ctx, *, arg):
-        if arg == "server":
-            await ctx.message.delete()
-            await ctx.author.send("Voici le Discord du bot : https://discord.gg/WamZS7CExw (FR)")
-        elif arg == "bot":
-            await ctx.message.delete()
-            await ctx.author.send("Pour m'inviter sur ton serveur Discord, utilise ce lien : <https://discord.com/oauth2/authorize?client_id=760171813866700850&permissions=134605888&scope=bot>")                
-        else:
-            await ctx.message.send(f"{ctx.author.mention} N'oublie pas l'argument ! (Plus d'informations : **+help invite**)")
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def setup(client):
-    client.add_cog(Others(client))
-
-def teardown(client):
-    client.remove_cog("invite")
+def teardown(bot):
+    bot.remove_cog("invite")

@@ -1,21 +1,20 @@
 import discord, requests
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def cat(self, ctx):
+    @cog_ext.cog_slash(name="cat", description="Afficher une photo aléatoire de chat !")
+    async def _cat(self, ctx):
         animal_images = requests.get("http://aws.random.cat//meow").json()
-        async with ctx.channel.typing():
-            embed = discord.Embed(title="Un chat sauvage apparaît !", description="Meow !")
-            embed.set_image(url=animal_images['file'])
+        embed = discord.Embed(title="Un chat sauvage apparaît !", description="Meow !")
+        embed.set_image(url=animal_images['file'])
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("cat")
+def teardown(bot):
+    bot.remove_cog("cat")

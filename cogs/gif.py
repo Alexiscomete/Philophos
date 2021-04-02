@@ -1,25 +1,34 @@
-import discord, TenGiphPy
+import discord, TenGiphPy, json
 from discord.ext import commands
+from discord_slash import cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-class Others(commands.Cog):
+class Slash(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __init__(self, client):
-        self.client = client
-
-    @commands.command()
-    async def gif(self, ctx, *, keyword):
-        await ctx.message.delete()
-        async with ctx.channel.typing():
-            rgif = TenGiphPy.Tenor(token='88JQLKP3WXAI')
-            msg = rgif.random(keyword)
-            embed = discord.Embed()
-            embed.add_field(name=f"GIF de **{keyword}** demandé par {ctx.author.name} !", value=ctx.author.mention, inline=False)
-            embed.set_image(url=msg)
-            embed.set_footer(text=f"Service utilisé : Tenor")
+    @cog_ext.cog_slash(name="gif", description="Afficher un gif en fonction ds mot(s)-clef(s) entré(s)", options=[
+                create_option(
+                name="requête",
+                description="mot(s)-clef(s) à rechercher sur tenor !",
+                option_type=3,
+                required=True
+                )])
+    async def _gif(self, ctx, requête: str = None):
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        tengiphpy_api_key = json_object_nm['token']['tengiphpy']
+        rgif = TenGiphPy.Tenor(token=tengiphpy_api_key)
+        msg = rgif.random(requête)
+        embed = discord.Embed()
+        embed.add_field(name=f"GIF de **{requête}** demandé par {ctx.author.name} !", value=ctx.author.mention, inline=False)
+        embed.set_image(url=msg)
+        embed.set_footer(text=f"Service utilisé : Tenor")
         await ctx.send(embed=embed)
 
-def setup(client):
-    client.add_cog(Others(client))
+def setup(bot):
+    bot.add_cog(Slash(bot))
 
-def teardown(client):
-    client.remove_cog("gif")
+def teardown(bot):
+    bot.remove_cog("gif")

@@ -1,5 +1,6 @@
-import discord, os, json, sqlite3, json
+import discord, os, json, asyncio
 from discord.ext import commands
+from discord_slash import SlashCommand
 
 def get_token():
     a_file = open("no-move.json", "r")
@@ -8,49 +9,16 @@ def get_token():
     token = str(json_object_nm['token']['bot'])
     return token
 
-intents = discord.Intents.all()
-client = commands.Bot(command_prefix='+', intents=intents)
-client.remove_command('help')
+bot = commands.Bot(command_prefix="prefix", intents=discord.Intents.all())
+slash = SlashCommand(bot, override_type = True, sync_commands=True, sync_on_cog_reload=True)
 
-@client.event
+@bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
-        a_file = open("no-move.json", "r")
-        json_object_nm = json.load(a_file)
-        a_file.close()
-        phrase_cooldown = json_object_nm['phrase_cooldown']
-        await ctx.send(f"{ctx.author.mention} {phrase_cooldown}", delete_after=10)
-        await ctx.message.delete()
-
-@client.command()
-async def load(ctx, *args):
-    if ctx.author.id == 307092817942020096:
-        cog_list, espace = [], " "
-        for ext in args:
-            cog_list.append(ext)
-            client.load_extension(f"cogs.{ext}")
-        await ctx.send(f"{espace.join(cog_list)} *ont été chargés !*")
-
-@client.command()
-async def unload(ctx, *args):
-    if ctx.author.id == 307092817942020096:
-        cog_list, espace = [], " "
-        for ext in args:
-            cog_list.append(ext)
-            client.unload_extension(f"cogs.{ext}")
-        await ctx.send(f"{espace.join(cog_list)} *ont été déchargés !*")
-
-@client.command()
-async def restart(ctx, *args):
-    if ctx.author.id == 307092817942020096:
-        cog_list, espace = [], " "
-        for ext in args:
-            cog_list.append(ext)
-            client.reload_extension(f"cogs.{ext}")
-        await ctx.send(f"{espace.join(cog_list)} *ont été rechargés !*")
+        await ctx.send(f"Cette commande est en cooldown, tu pourras la réutiliser dans {round(error.retry_after, 2)}\n*(commandes **daily** et **rep** : 24h & commande **rep** : 6h)*")
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        client.load_extension(f'cogs.{filename[:-3]}')
+        bot.load_extension(f'cogs.{filename[:-3]}')
 
-client.run(get_token())
+bot.run(get_token())
