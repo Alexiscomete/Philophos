@@ -1,4 +1,4 @@
-import discord, asyncio, random, requests
+import discord, asyncio, random, requests, json
 from discord.ext import commands, tasks
 from datetime import datetime, timedelta
 from discord_slash import cog_ext, SlashContext
@@ -15,7 +15,6 @@ class Slash(commands.Cog):
         await asyncio.sleep(3)
         self.status.start()
 
-    
     @cog_ext.cog_slash(name="ping", description="Afficher la latence et l'uptime du bot !")
     async def _ping(self, ctx):
         uptime_now = datetime.now()
@@ -42,8 +41,11 @@ class Slash(commands.Cog):
         elif rdnb == 2:
             await self.bot.change_presence(activity=discord.Game(name="iso-land.org/amanager"))
         elif rdnb == 3:
-            changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
-            changelog_versions = list(changelog_versions['changelogs'])
+            a_file = open("no-move.json", "r")
+            json_object_nm = json.load(a_file)
+            a_file.close()
+            changelog_versions = json_object_nm['changelogs']
+            changelog_versions = list(changelog_versions)
             changelog_versions = changelog_versions[-1]
             await self.bot.change_presence(activity=discord.Game(name=f"v{changelog_versions}"))
 

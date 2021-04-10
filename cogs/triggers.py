@@ -79,8 +79,8 @@ class Others(commands.Cog):
                 elif "august" in mention_date.lower():
                     mention_time = "Bonnes vacances d'été ! " + str(mention_time)
 
-                changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
-                changelog_list = list(changelog_versions['changelogs'])
+                changelog_versions = json_object_nm['changelogs']
+                changelog_list = list(changelog_versions)
 
                 embed = discord.Embed(title=mention_time, description=f"Mon préfixe est **/** | **/help** pour plus d'infos !", color=0xf5900b)
                 embed.add_field(name="** **", value="Tu rencontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)

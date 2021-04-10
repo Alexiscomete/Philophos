@@ -1,4 +1,4 @@
-import discord, requests
+import discord, json
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option
@@ -15,8 +15,10 @@ class Slash(commands.Cog):
                 required=False
                 )])
     async def _changelog(self, ctx, version: str = None):
-        changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
-        changelog_versions = changelog_versions['changelogs']
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        changelog_versions = json_object_nm['changelogs']
 
         espace = "\n"
         if version == None:

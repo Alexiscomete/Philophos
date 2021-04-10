@@ -8,8 +8,7 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    guild_ids = [736689848626446396]
-    @cog_ext.cog_slash(guild_ids=guild_ids, name="settings", description="Afficher et modifier les paramètres du bot liés à ce serveur ! ⚠️ Nécessite la permission administrateur !")
+    @cog_ext.cog_slash(name="settings", description="Modifier les paramètres du bot liés à ce serveur ! ⚠️ Nécessite la permission administrateur !")
     async def _settings(self, ctx):
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
@@ -342,6 +341,7 @@ class Slash(commands.Cog):
                 server_values = cursor.fetchone()
 
                 if server_values == None:
+                    await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le système de messages Bienvenue/Au revoir est en train d'être créé...")
                     new_server = (ctx.guild.id, "Un nouveau membre a rejoint le serveur !", "Un membre a quitté le serveur...", "no", "no", "Pas lié")
                     cursor.execute('INSERT INTO bienvenue_au_revoir VALUES(?, ?, ?, ?, ?, ?)', new_server)
                     connection.commit()

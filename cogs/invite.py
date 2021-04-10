@@ -11,7 +11,7 @@ class Slash(commands.Cog):
     async def _invite(self, ctx):
         embed = discord.Embed(title="Liens d'invitations")
         embed.add_field(name="Si vous n'avez pas invité le bot sur votre serveur", value="[clique ici](https://iso-land.org/amanager)", inline=False)
-        embed.add_field(name="Si vous avez invité le bot avant le 26 mars 2021", value="[clique ici](https://iso-land.org/amanager-add_slash_commands)", inline=False)
+        embed.add_field(name="Si vous avez invité le bot avant le 26 mars 2021", value="[clique ici](https://iso-land.org/amanager/add_slash_commands)", inline=False)
         embed.add_field(name="Le serveur support", value="[clique ici](https://discord.gg/WamZS7CExw)", inline=False)
         await ctx.send(embed=embed)
 

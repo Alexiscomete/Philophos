@@ -20,8 +20,11 @@ class Slash(commands.Cog):
         a_file.close()
 
         command_groups, command_groups_cut = [], []
-        changelog_versions = requests.get(f"https://iso-land.org/api/amanager/changelog.json").json()
-        changelog_list = list(changelog_versions['changelogs'])
+        a_file = open("no-move.json", "r")
+        json_object_nm = json.load(a_file)
+        a_file.close()
+        changelog_versions = json_object_nm['changelogs']
+        changelog_list = list(changelog_versions)
         separateur = "` `"
 
         for key in json_object_nm['main_help_command']:

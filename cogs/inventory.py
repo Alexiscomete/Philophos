@@ -28,11 +28,13 @@ class Slash(commands.Cog):
             else:
                 await ctx.send(f"{ctx.author.mention} Tu ne peux pas afficher l'inventaire de cette personne car elle ne s'est pas inscrite à l'aventure ISO land... Pour qu'elle s'inscrire, elle peut faire **/start** !")
         else:
-            slots_max = member_values[7]
+            virgule = ", "
             inventory = member_values[8]
+            slots_max = member_values[7]
             slots_used = len(inventory.split(" "))
+
             embed = discord.Embed(title=f"Inventaire de {membre.name} (bêta)", description=membre.mention, color=0x000000)
-            embed.add_field(name=f"Emplacements : {slots_used}/{slots_max}", value=inventory, inline=False)
+            embed.add_field(name=f"Basique : {slots_used}/{slots_max}", value=inventory, inline=False)
             await ctx.send(embed=embed)
 
 def setup(bot):
