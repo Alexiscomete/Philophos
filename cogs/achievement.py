@@ -42,7 +42,7 @@ class Slash(commands.Cog):
                 embed.add_field(name=f"Points de réputation ({len_a_reppoints}/{all_a_reppoints})", value=a_reppoints, inline=False)
             if a_misc != "":
                 embed.add_field(name=f"Divers ({len_a_misc}/{all_a_misc})", value=a_misc, inline=False)
-            embed.set_footer(text="➡️ Pour voir ton inventaire, fait /inventory !\n➡️ Pour voir ta aCard, fait /card !")
+            embed.set_footer(text="➡️ Pour voir ta aCard, fait /card !")
             await ctx.send(embed=embed)
 
         connection.close()

@@ -51,7 +51,7 @@ class Slash(commands.Cog):
                 embed.add_field(name="<:0_reputation_point:822158196068188161> Point(s) de réputation", value=rep_points, inline=True)
                 embed.add_field(name="<:aCoin:822427301488623620> Crédits", value=daily, inline=True)
                 embed.add_field(name=f"{job_emoji} Travail (bêta)", value=job, inline=True)
-                embed.set_footer(text="➡️  Pour voir ton inventaire, fait /inventory !\n➡️  Pour voir tes succès, fait /achievement !")
+                embed.set_footer(text="➡️  Pour voir tes succès, fait /achievement !")
                 await ctx.send(embed=embed)
 
 def setup(bot):

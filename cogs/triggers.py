@@ -82,9 +82,16 @@ class Others(commands.Cog):
                 changelog_versions = json_object_nm['changelogs']
                 changelog_list = list(changelog_versions)
 
+                servers, members = 0, 0
+                for guild in self.client.guilds:
+                    for member in guild.members:
+                        if member.bot == False:
+                            members += 1
+                    servers += 1
+
                 embed = discord.Embed(title=mention_time, description=f"Mon préfixe est **/** | **/help** pour plus d'infos !", color=0xf5900b)
                 embed.add_field(name="** **", value="Tu rencontres des bugs, tu as besoin d'aide, tu veux contribuer ou juste discuter ? Tu peux rejoindre le [serveur support](https://discord.gg/WamZS7CExw) du bot !", inline=False)
-                embed.set_footer(text=f"v{changelog_list[-1]}")
+                embed.set_footer(text=f"v{changelog_list[-1]} | {members} membres | {servers} serveurs")
                 await message.channel.send(embed=embed)
 
 #########################

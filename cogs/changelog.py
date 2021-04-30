@@ -32,7 +32,6 @@ class Slash(commands.Cog):
             else:
                 cg = changelog_versions[f"{version.lower()}"]
                 embed = discord.Embed(title=f"Changelog • {version.lower()}", description=cg['date'], color=0x666666)
-                embed.set_footer(text="Les changelogs sont disponibles grâce à mon API, disponible ici : https://iso-land.org/api/")
                 await ctx.send(embed=embed, content=cg['description'])
 
 def setup(bot):

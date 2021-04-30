@@ -15,7 +15,7 @@ class Slash(commands.Cog):
         await asyncio.sleep(3)
         self.status.start()
 
-    @cog_ext.cog_slash(name="ping", description="Afficher la latence et l'uptime du bot !")
+    @cog_ext.cog_slash(name="ping", description="Afficher la latence et l'uptime du bot !.")
     async def _ping(self, ctx):
         uptime_now = datetime.now()
         t1 = timedelta(days=uptime_start.day, hours=uptime_start.hour, minutes=uptime_start.minute, seconds=uptime_start.second)

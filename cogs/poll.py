@@ -79,8 +79,8 @@ class Slash(commands.Cog):
         cursor = connection.cursor()
         emote_reactions, n, bs_n, numbers, options, poll_message = [], 0, "\n", ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'], [], []
 
-        if Option_1 != None: options.append(Option_1)
-        if Option_2 != None: options.append(Option_2)
+        options.append(Option_1)
+        options.append(Option_2)
         if Option_3 != None: options.append(Option_3)
         if Option_4 != None: options.append(Option_4)
         if Option_5 != None: options.append(Option_5)

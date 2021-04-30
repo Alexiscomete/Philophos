@@ -8,6 +8,7 @@ class Slash(commands.Cog):
 
     @cog_ext.cog_slash(name="dog", description="Afficher une photo aléatoire de chien !")
     async def _dog(self, ctx):
+        await ctx.defer()
         animal_images = requests.get("https://random.dog/woof.json").json()
         embed = discord.Embed(title="Un chien sauvage apparaît !", description="Woof !")
         embed.set_image(url=animal_images['url'])

@@ -7,13 +7,8 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="avatar", description="Afficher ta photo de profil, ou celle d'un utilisateur !", options=[
-                create_option(
-                name="membre",
-                description="Membre de discord à qui souhaiter un anniversaire",
-                option_type=6,
-                required=False
-                )]) 
+    
+    @cog_ext.cog_slash(name="avatar", description="Afficher ta photo de profil, ou celle d'un utilisateur !") 
     async def _avatar(self, ctx, membre: discord.Member = None):
         if membre == None:
             membre = ctx.author

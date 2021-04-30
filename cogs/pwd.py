@@ -76,8 +76,10 @@ class Slash(commands.Cog):
                             pwd_list.append(random.choice(list(string.ascii_uppercase)))
             password = pas_espace.join(pwd_list)
             return password
-        if nombre_de_caractères > 128 or nombre_de_caractères < 8:
-            await ctx.send(f"{ctx.author.mention} Le nombre que tu as entré n'est pas valide... (Il est trop grand ou trop petit.)")
+
+        min_car, max_car = 8, 256
+        if nombre_de_caractères > max_car or nombre_de_caractères < min_car:
+            await ctx.send(f"{ctx.author.mention} Le nombre que tu as entré n'est pas valide... (Le minimum étant de {min_car} et le maximum de {max_car} !)")
         else:
             password = password_gen(nombre_de_caractères, nombres_, caractères_spéciaux_)
             pwd_end = await ctx.send(f"{ctx.author.mention} Ton mot de passe a été envoyé en MP !")

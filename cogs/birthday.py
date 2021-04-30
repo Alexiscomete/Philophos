@@ -23,16 +23,16 @@ class Slash(commands.Cog):
         rgif = TenGiphPy.Tenor(token=tengiphpy_api_key)
         dance_gif = rgif.random("birthday anime")
         if membre == None:
-            embed.add_field(name=f"{ctx.author.name} s'est vu souhaité son anniversaire !", value=f'{ctx.author.mention}', inline=False)
+            embed.add_field(name=f"{ctx.author.name} s'est vu souhaité un bon anniversaire !", value=f'{ctx.author.mention}', inline=False)
             embed.set_image(url=dance_gif)
             await ctx.send(embed=embed)
         else:
             if str(membre) == str(ctx.author):
-                embed.add_field(name=f"{ctx.author.name} s'est souhaité son anniversaire... !?", value=f"{ctx.author.mention}", inline=False)
+                embed.add_field(name=f"{ctx.author.name} s'est souhaité un bon anniversaire... !?", value=f"{ctx.author.mention}", inline=False)
                 embed.set_image(url=dance_gif)
                 await ctx.send(embed=embed)
             else:
-                embed.add_field(name=f"{ctx.author.name} a souhaité son anniversaire à {membre.name} !", value=f'{ctx.author.mention} {membre.mention}', inline=False)
+                embed.add_field(name=f"{ctx.author.name} a souhaité un bon anniversaire à {membre.name} !", value=f'{ctx.author.mention} {membre.mention}', inline=False)
                 embed.set_image(url=dance_gif)
                 await ctx.send(embed=embed)
 

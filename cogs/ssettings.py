@@ -8,8 +8,8 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="settings", description="Modifier les paramètres du bot liés à ce serveur ! ⚠️ Nécessite la permission administrateur !")
-    async def _settings(self, ctx):
+    @cog_ext.cog_slash(name="ssettings", description="Modifier les paramètres du bot liés à ce serveur ! ⚠️ Nécessite la permission administrateur !.")
+    async def _ssettings(self, ctx):
         def check(msg):
             return msg.author == ctx.author and msg.channel == ctx.channel
         if ctx.author.guild_permissions.administrator or ctx.author.id == 307092817942020096:
@@ -17,7 +17,7 @@ class Slash(commands.Cog):
             embed.add_field(name=":one: Afficher les informations des paramètres du bot sur ce serveur.", value="** **", inline=False)
             embed.add_field(name=":two: Créer/Modifier ton starboard.", value="** **", inline=False)
             embed.add_field(name=":three: Expérience & Niveaux", value="** **", inline=False)
-            embed.add_field(name=":four: Bienvenue/Au revoir", value="** **", inline=False)
+            embed.add_field(name=":four: Créer/Modifier 'Bienvenue/Au revoir'", value="** **", inline=False)
             embed.add_field(name=":x: Sortir du menu d'édition.", value="** **", inline=False)
             settings_edit = await ctx.send(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
@@ -64,12 +64,12 @@ class Slash(commands.Cog):
                 embed.add_field(name="Expérience & Niveaux", value=f"Activé ? {is_activated_xp}\nUP message activé ? {is_activated_up_message}\nUP message (exemple) : {up_message}\nSalon de l'up message : {up_message_channel}", inline=False)
                 connection.close()
 
+                connection = sqlite3.connect("iso_card.db")
+                cursor = connection.cursor()
+                cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
+                server_values = cursor.fetchone()
+                connection.close()
                 if server_values != None:
-                    connection = sqlite3.connect("iso_card.db")
-                    cursor = connection.cursor()
-                    cursor.execute('SELECT * FROM bienvenue_au_revoir WHERE server_id = ?', server_id)
-                    server_values = cursor.fetchone()
-                    connection.close()
                     hello_activated = server_values[3]
                     if hello_activated == "yes": hello_activated = ":white_check_mark:"
                     elif hello_activated == "no": hello_activated = ":x:"
@@ -457,8 +457,6 @@ class Slash(commands.Cog):
                     cursor.execute('UPDATE bienvenue_au_revoir SET hello_goodbye_channel = ? WHERE server_id = ?', updated_server)
                     connection.commit()
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le message pour indiquer l'arrivée d'un membre a été actualisé !\n> {ancient_hello_goodbye_channel} ===> {hello_goodbye_channel}")
-
-            connection.close()
         else:
             await ctx.send(f"{ctx.author.mention} Tu n'as pas la permission de faire cela sur ce serveur :angry:")
 
@@ -466,4 +464,4 @@ def setup(bot):
     bot.add_cog(Slash(bot))
 
 def teardown(bot):
-    bot.remove_cog("settings")
+    bot.remove_cog("ssettings")

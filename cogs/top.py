@@ -7,7 +7,7 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="top", description="Voir le classement des systèmes d'économie", options=[
+    @cog_ext.cog_slash(name="top", description="Voir le classement des systèmes d'économie /", options=[
                 create_option(
                 name="catégorie",
                 description="Catégorie de classement",
@@ -27,6 +27,7 @@ class Slash(commands.Cog):
                 value="exp"
                 )])])
     async def _top(self, ctx, catégorie: str):
+        await ctx.defer()
         m_list, bs_n, counter_rep, limite_max = [], "\n", 1, 10
         if catégorie == "rep":
             connection = sqlite3.connect("iso_card.db")
@@ -113,7 +114,7 @@ class Slash(commands.Cog):
             guild_name = "_" + str(ctx.guild.id)
             cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id)
             author_values = cursor.fetchone()
-            cursor.execute('SELECT * FROM {} ORDER BY exp DESC'.format(guild_name))
+            cursor.execute('SELECT * FROM {} ORDER BY exp DESC'.format(guild_name)) # points d'expérience triés
             values = cursor.fetchall()[0:limite_max]
             if author_values != None:
                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
@@ -122,7 +123,13 @@ class Slash(commands.Cog):
                 for element in values:
                     if int(element[1]) > 0:
                         member = await self.bot.fetch_user(str(element[0]))
+                        member_id = (f"{member.id}",)
+                        cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id) # niveaux triés
+                        author_level = cursor.fetchone()
+                        if author_level != None:
+                            author_level_a = int(author_level[2])
                         if member == ctx.author:
+                            author_level_s = author_level_a
                             author_rank = counter_rep
                             author_rep = element[1]
                             if author_rank == 1:
@@ -133,17 +140,17 @@ class Slash(commands.Cog):
                                 embed = discord.Embed(title="Classement des points d'expérience", description="** **", color=0xFF8A3B)
                             else:
                                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
-                            m_list.append(f"#{counter_rep} **{member.name}** : {element[1]}")
+                            m_list.append(f"#{counter_rep} **{member.name}** : {element[1]} ({author_level_a})")
                         else:
-                            m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
+                            m_list.append(f"#{counter_rep} {member.name} : {element[1]} ({author_level_a})")
                         counter_rep += 1
-                embed.add_field(name=f"Ta position dans le classement de ce serveur est : **#{author_rank}** !\nAvec un total de **{author_rep}** points d'expérience !", value=f"\n{bs_n.join(m_list)}", inline=False)
+                embed.add_field(name=f"Ta position dans le classement de ce serveur est : **#{author_rank}** !\nAvoir atteint le niveau **{author_level_s}** et un total de **{author_rep}** points d'expérience !", value=f"{bs_n.join(m_list)}", inline=False)
             else:
                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
                 for element in values:
                     if int(element[1]) > 0:
                         member = await self.bot.fetch_user(str(element[0]))
-                        m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
+                        m_list.append(f"#{counter_rep} {member.name} : {element[1]} ({author_level_a})")
                         counter_rep += 1
                 embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **/start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)

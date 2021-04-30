@@ -8,6 +8,7 @@ class Slash(commands.Cog):
 
     @cog_ext.cog_slash(name="meme", description="Afficher un meme aléatoire tiré de subreddits !")
     async def _meme(self, ctx):
+        await ctx.defer()
         meme_response = requests.get("https://meme-api.herokuapp.com/gimme").json()
         embed = discord.Embed(title=f"Meme", description=meme_response["postLink"])
         embed.add_field(name=f"Meme de {meme_response['author']}", value=f"Subreddit : **r/{meme_response['subreddit']}** | <:reddit_upvote:791346828012552202> {meme_response['ups']}", inline=False)
