@@ -177,82 +177,90 @@ class Others(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        connection = sqlite3.connect("starboard.db")
-        cursor = connection.cursor()
-        server_id = (f"{payload.guild_id}",)
-        cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
-        server_values = cursor.fetchone()
-        if server_values != None and server_values[1] == "yes":
-            if payload.emoji.name == str(server_values[3]):
-                message_id_cursor = 'SELECT * FROM {} WHERE message_id = {}'.format(f"_{payload.guild_id}", payload.message_id)
-                cursor.execute(message_id_cursor)
-                message_values = cursor.fetchone()
-
-                if message_values == None:
-                    new_message = (int(payload.message_id), int(payload.channel_id), 1, 0, "no")
-                    cursor.execute('INSERT INTO {} VALUES(?, ?, ?, ?, ?)'.format(f"_{payload.guild_id}"), new_message)
-                    connection.commit()
-                else:
-                    nb_stars = int(message_values[2])
-                    if nb_stars >= 0:
-                        new_nb_of_stars = nb_stars + 1
-                        updated_user = (f"{new_nb_of_stars}", f"{payload.message_id}",)
-                        cursor.execute('UPDATE {} SET number_of_stars = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_user)
-                        connection.commit()
-
-                        message_id = (f"{payload.message_id}",)
-                        cursor.execute('SELECT * FROM {} WHERE message_id = ?'.format(f"_{payload.guild_id}"), message_id)
-                        messages_values_f = cursor.fetchone()
-                        server_id = (f"{payload.guild_id}",)
-                        cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
+        channel_to_find = self.client.get_channel(payload.channel_id)
+        massi = await channel_to_find.fetch_message(payload.message_id)
+ 
+        if not massi.embeds:
+            connection = sqlite3.connect("starboard.db")
+            cursor = connection.cursor()
+            server_id = (f"{payload.guild_id}",)
+            cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
+            server_values = cursor.fetchone()
+            if massi.author.id == payload.user_id:
+                server_emoji_trigger = server_values[3]
+                await massi.remove_reaction(str(server_emoji_trigger), massi.author)
+            else:
+                if server_values != None and server_values[1] == "yes":
+                    if payload.emoji.name == str(server_values[3]):
+                        message_id_cursor = 'SELECT * FROM {} WHERE message_id = {}'.format(f"_{payload.guild_id}", payload.message_id)
+                        cursor.execute(message_id_cursor)
                         message_values = cursor.fetchone()
 
-                        chosen_emoji = message_values[3]
-                        number_of_stars = int(messages_values_f[2])
-                        was_message_sent = messages_values_f[4]
-                        limit_trigger = message_values[2]
-
-                        if number_of_stars == limit_trigger:
-                            if was_message_sent == "no":
-                                was_message_sent = "yes"
-                                channel_to_send = self.client.get_channel(int(message_values[4]))
-                                channel_to_find = self.client.get_channel(payload.channel_id)
-                                msg = await channel_to_find.fetch_message(payload.message_id)
-                                embed = discord.Embed(title="Nouveau message sur le starboard !", description=f"de {msg.author.mention} | [ID du message](https://discord.com/channels/736689848626446396/{msg.channel.id}/{msg.id})")
-                                try:
-                                    embed.set_image(url=msg.attachments[0].url)
-                                except IndexError:
-                                    pass
-                                embed.add_field(name=f"{number_of_stars} {chosen_emoji}", value="** **", inline=False)
-                                if msg.content:
-                                    embed.add_field(name="** **", value=msg.content, inline=False)
-                                bot_message = await channel_to_send.send(embed=embed)
-                                updated_user = (f"{bot_message.id}", f"{payload.message_id}",)
-                                cursor.execute('UPDATE {} SET bot_message_id = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_user)
-                                updated_message_s = (f"{was_message_sent}", f"{payload.message_id}",)
-                                cursor.execute('UPDATE {} SET was_message_sent = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_message_s)
+                        if message_values == None:
+                            new_message = (int(payload.message_id), int(payload.channel_id), 1, 0, "no")
+                            cursor.execute('INSERT INTO {} VALUES(?, ?, ?, ?, ?)'.format(f"_{payload.guild_id}"), new_message)
+                            connection.commit()
+                        else:
+                            nb_stars = int(message_values[2])
+                            if nb_stars >= 0:
+                                new_nb_of_stars = nb_stars + 1
+                                updated_user = (f"{new_nb_of_stars}", f"{payload.message_id}",)
+                                cursor.execute('UPDATE {} SET number_of_stars = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_user)
                                 connection.commit()
-                        elif number_of_stars > limit_trigger:
-                            cursor.execute('SELECT * FROM {} WHERE message_id = ?'.format(f"_{payload.guild_id}"), message_id)
-                            messages_values_b = cursor.fetchone()
-                            b_msg = messages_values_b[3]
-                            channel_to_find = self.client.get_channel(int(message_values[4]))
-                            msg_bot = await channel_to_find.fetch_message(b_msg)
 
-                            channel_to_send = self.client.get_channel(int(message_values[4]))
-                            channel_to_find = self.client.get_channel(payload.channel_id)
-                            msg = await channel_to_find.fetch_message(payload.message_id)
+                                message_id = (f"{payload.message_id}",)
+                                cursor.execute('SELECT * FROM {} WHERE message_id = ?'.format(f"_{payload.guild_id}"), message_id)
+                                messages_values_f = cursor.fetchone()
+                                server_id = (f"{payload.guild_id}",)
+                                cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
+                                message_values = cursor.fetchone()
 
-                            embed = discord.Embed(title="Nouveau message sur le starboard !", description=f"de {msg.author.mention}")
-                            try:
-                                embed.set_image(url=msg.attachments[0].url)
-                            except IndexError:
-                                pass
-                            embed.add_field(name=f"{number_of_stars} :star:", value=msg.content, inline=False)
-                            embed.add_field(name="** **", value=f"[ID du message](https://discord.com/channels/736689848626446396/{msg.channel.id}/{msg.id})", inline=False)
-                            await msg_bot.edit(content=None, embed=embed)
+                                chosen_emoji = message_values[3]
+                                number_of_stars = int(messages_values_f[2])
+                                was_message_sent = messages_values_f[4]
+                                limit_trigger = message_values[2]
 
-        connection.close()
+                                if number_of_stars == limit_trigger:
+                                    if was_message_sent == "no":
+                                        was_message_sent = "yes"
+                                        channel_to_send = self.client.get_channel(int(message_values[4]))
+                                        channel_to_find = self.client.get_channel(payload.channel_id)
+                                        msg = await channel_to_find.fetch_message(payload.message_id)
+                                        embed = discord.Embed(title="Nouveau message sur le starboard !", description=f"de {msg.author.mention} | [ID du message](https://discord.com/channels/736689848626446396/{msg.channel.id}/{msg.id})")
+                                        try:
+                                            embed.set_image(url=msg.attachments[0].url)
+                                        except IndexError:
+                                            pass
+                                        embed.add_field(name=f"{number_of_stars} {chosen_emoji}", value="** **", inline=False)
+                                        if msg.content:
+                                            embed.add_field(name="** **", value=msg.content, inline=False)
+                                        bot_message = await channel_to_send.send(embed=embed)
+                                        updated_user = (f"{bot_message.id}", f"{payload.message_id}",)
+                                        cursor.execute('UPDATE {} SET bot_message_id = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_user)
+                                        updated_message_s = (f"{was_message_sent}", f"{payload.message_id}",)
+                                        cursor.execute('UPDATE {} SET was_message_sent = ? WHERE message_id = ?'.format(f"_{payload.guild_id}"), updated_message_s)
+                                        connection.commit()
+                                elif number_of_stars > limit_trigger:
+                                    cursor.execute('SELECT * FROM {} WHERE message_id = ?'.format(f"_{payload.guild_id}"), message_id)
+                                    messages_values_b = cursor.fetchone()
+                                    b_msg = messages_values_b[3]
+                                    channel_to_find = self.client.get_channel(int(message_values[4]))
+                                    msg_bot = await channel_to_find.fetch_message(b_msg)
+
+                                    channel_to_send = self.client.get_channel(int(message_values[4]))
+                                    channel_to_find = self.client.get_channel(payload.channel_id)
+                                    msg = await channel_to_find.fetch_message(payload.message_id)
+
+                                    embed = discord.Embed(title="Nouveau message sur le starboard !", description=f"de {msg.author.mention}")
+                                    try:
+                                        embed.set_image(url=msg.attachments[0].url)
+                                    except IndexError:
+                                        pass
+                                    embed.add_field(name=f"{number_of_stars} :star:", value=msg.content, inline=False)
+                                    embed.add_field(name="** **", value=f"[ID du message](https://discord.com/channels/736689848626446396/{msg.channel.id}/{msg.id})", inline=False)
+                                    await msg_bot.edit(content=None, embed=embed)
+
+                connection.close()
 
 #########################################
 # STARBOARD - SUPPRESSIONS DE RÉACTIONS #

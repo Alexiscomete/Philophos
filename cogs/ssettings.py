@@ -45,7 +45,10 @@ class Slash(commands.Cog):
                     is_sb_activated = server_values[1]
                     if is_sb_activated == "yes": is_sb_activated = ":white_check_mark:"
                     elif is_sb_activated == "no": is_sb_activated = ":x:"
-                    embed.add_field(name="Starboard", value=f"Activé ? {is_sb_activated}", inline=False)
+                    reactions_limit = server_values[2]
+                    emoji = server_values[3]
+                    bound_channel = f"<#{server_values[4]}>"
+                    embed.add_field(name="Starboard", value=f"Activé ? {is_sb_activated}\nLimite de réactions : {reactions_limit}\nEmoji : {emoji}\nSalon lié : {bound_channel}", inline=False)
 
                 connection = sqlite3.connect("levels.db")
                 cursor = connection.cursor()
@@ -103,11 +106,10 @@ class Slash(commands.Cog):
                     await asyncio.sleep(3)
 
                 embed = discord.Embed(title="Bienvenue dans le menu d'édition du starboard.", description=ctx.author.mention)
-                embed.add_field(name=":one: Obtenir des informations sur le starboard de ce serveur.", value="** **", inline=False)
-                embed.add_field(name=":two: Activer/Désactiver le starboard.", value="** **", inline=False)
-                embed.add_field(name=":three: Choisir la limite de réactions.", value="** **", inline=False)
-                embed.add_field(name=":four: Choisir l'emoji qui déclenchera.", value="** **", inline=False)
-                embed.add_field(name=":five: Lier un salon.", value="** **", inline=False)
+                embed.add_field(name=":one: Activer/Désactiver le starboard.", value="** **", inline=False)
+                embed.add_field(name=":two: Choisir la limite de réactions.", value="** **", inline=False)
+                embed.add_field(name=":three: Choisir l'emoji qui déclenchera.", value="** **", inline=False)
+                embed.add_field(name=":four: Lier un salon.", value="** **", inline=False)
                 embed.add_field(name=":x: Sortir du menu d'édition.", value="** **", inline=False)
                 await settings_edit.edit(embed=embed, content="> Tu as 15 secondes pour répondre.")
 
@@ -126,27 +128,6 @@ class Slash(commands.Cog):
                     cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                     server_values = cursor.fetchone()
                     is_activated = server_values[1]
-                    reactions_limit = server_values[2]
-                    emoji = server_values[3]
-                    bound_channel = server_values[4]
-                    if is_activated == "yes":
-                        is_activated = ":white_check_mark:"
-                    else:
-                        is_activated = "❌"
-                    if bound_channel != "Pas lié":
-                        bound_channel = "<" + str(bound_channel) + ">"
-                    embed = discord.Embed(title=f"Starboard du serveur {ctx.guild.name}", description=ctx.author.mention, color=0x301934)
-                    embed.add_field(name="Le starboard est activé ?", value=is_activated, inline=False)
-                    embed.add_field(name="Limite de réactions", value=reactions_limit, inline=True)
-                    embed.add_field(name="Emoji", value=emoji, inline=True)
-                    embed.add_field(name="Salon lié", value=bound_channel, inline=False)
-                    await settings_edit.edit(content=None, embed=embed)
-
-                elif choice == "2":
-                    server_id = (f"{ctx.guild.id}",)
-                    cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
-                    server_values = cursor.fetchone()
-                    is_activated = server_values[1]
                     if is_activated == "yes":
                         is_activated = "no"
                         actif = "désactivé"
@@ -158,7 +139,7 @@ class Slash(commands.Cog):
                     connection.commit()
                     await settings_edit.edit(embed=None, content=f"{ctx.author.mention} Le starboard a bien été {actif} !")
 
-                elif choice == "3":
+                elif choice == "2":
                     server_id = (f"{ctx.guild.id}",)
                     cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                     ancienne_limite_reactions = cursor.fetchone()[2]
@@ -185,7 +166,7 @@ class Slash(commands.Cog):
                             connection.commit()
                             await settings_edit.edit(embed=None, content=f"{ctx.author.mention} La limite a bien été redéfinie ! ({ancienne_limite_reactions} -> {reactions_limit})")
 
-                elif choice == "4":
+                elif choice == "3":
                     server_id = (f"{ctx.guild.id}",)
                     cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                     ancien_emoji = cursor.fetchone()[3]
@@ -207,7 +188,7 @@ class Slash(commands.Cog):
                         connection.commit()
                         await settings_edit.edit(embed=None, content=f"{ctx.author.mention} L'émoji du starboard a bien été redéfini ! ({ancien_emoji} -> {new_emoji})")
 
-                elif choice == "5":
+                elif choice == "4":
                     server_id = (f"{ctx.guild.id}",)
                     cursor.execute('SELECT * FROM starboard_generals WHERE server_id = ?', server_id)
                     ancien_salon = cursor.fetchone()[4]

@@ -7,7 +7,7 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="top", description="Voir le classement des systèmes d'économie /", options=[
+    @cog_ext.cog_slash(name="top", description="Voir le classement des systèmes d'économie !", options=[
                 create_option(
                 name="catégorie",
                 description="Catégorie de classement",
@@ -27,7 +27,6 @@ class Slash(commands.Cog):
                 value="exp"
                 )])])
     async def _top(self, ctx, catégorie: str):
-        await ctx.defer()
         m_list, bs_n, counter_rep, limite_max = [], "\n", 1, 10
         if catégorie == "rep":
             connection = sqlite3.connect("iso_card.db")
@@ -118,16 +117,16 @@ class Slash(commands.Cog):
             values = cursor.fetchall()[0:limite_max]
             if author_values != None:
                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
-                author_rank = "non classée"
+                author_rank = "non classé(e)"
                 author_rep = int(author_values[1])
+                author_level_s = int(author_values[2])
                 for element in values:
                     if int(element[1]) > 0:
                         member = await self.bot.fetch_user(str(element[0]))
                         member_id = (f"{member.id}",)
                         cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id) # niveaux triés
                         author_level = cursor.fetchone()
-                        if author_level != None:
-                            author_level_a = int(author_level[2])
+                        author_level_a = int(author_level[2])
                         if member == ctx.author:
                             author_level_s = author_level_a
                             author_rank = counter_rep

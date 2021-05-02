@@ -7,7 +7,7 @@ class Slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="rank", description="Afficher ton niveau d'expérience, ou celui de quelqu'un d'autre, sur ce serveur !", options=[
+    @cog_ext.cog_slash(name="rank", description="Afficher ton niveau d'expérience, ou celui de quelqu'un d'autre, sur ce serveur !.", options=[
                 create_option(
                 name="membre",
                 description="Membre de discord",
@@ -35,13 +35,14 @@ class Slash(commands.Cog):
                     await ctx.send(f"{ctx.author.mention} Renvoie la commande pour que l'activation de ton système d'XP s'effectue !")
                 elif member_values != None:
                     exp = member_values[1]
-                    level = int(member_values[2])
+                    level = member_values[2]
                     exp_goal = member_values[3]
                     if level == 100: level = ":infinity:"
+                    progression = round(exp/exp_goal*100)
                     embed = discord.Embed(title=f"Expérience de {membre.name}", description=membre.mention, color=0xf9c62d)
-                    embed.add_field(name=":arrow_right: XP", value=exp_goal, inline=True)
-                    embed.add_field(name=":large_orange_diamond: XP", value=exp, inline=True)
+                    embed.add_field(name=":large_orange_diamond: XP", value=f"{exp} / {exp_goal}", inline=True)
                     embed.add_field(name=":up: Niveau", value=level, inline=True)
+                    embed.add_field(name=":arrow_up_small: Progression", value=f"{progression}%", inline=True)
                     await ctx.send(embed=embed)
 
         connection.close()
