@@ -105,7 +105,7 @@ Amanager est un projet créé par [ISO Land](https://iso-land.org).
 
 * Start
 * Card
-* Rank
+* Rank ([calculatrice par Cyanic76](https://github.com/Cyanic76/Amanager-Level-Calc))
 * Rep
 * Top
 * Daily
