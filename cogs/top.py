@@ -39,8 +39,7 @@ class Slash(commands.Cog):
             if author_values != None:
                 for element in values:
                     if int(element[1]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        if member == ctx.author:
+                        if element[0] == ctx.author.id:
                             author_rank = counter_rep
                             author_rep = element[1]
                             if author_rank == 1:
@@ -51,18 +50,17 @@ class Slash(commands.Cog):
                                 embed = discord.Embed(title="Classement des points de réputation", description="** **", color=0xFF8A3B)
                             else:
                                 embed = discord.Embed(title="Classement des points de réputation", description="** **")
-                            m_list.append(f"#{counter_rep} **{member.name}** : {element[1]}")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]}")
                         else:
                             embed = discord.Embed(title="Classement des points de réputation", description="** **")
-                            m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]}")
                         counter_rep += 1
                 embed.add_field(name=f"Ta position dans le classement est : **#{author_rank}** !\nAvec un total de **{author_rep}** point(s) de réputation !", value=f"\n{bs_n.join(m_list)}", inline=False)
             else:
                 embed = discord.Embed(title="Classement des points de réputation", description="** **")
                 for element in values:
                     if int(element[1]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
+                        m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]}")
                         counter_rep += 1
                 embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **/start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
@@ -78,8 +76,7 @@ class Slash(commands.Cog):
             if author_values != None:
                 for element in values:
                     if int(element[5]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        if member == ctx.author:
+                        if element[0] == ctx.author.id:
                             author_rank = counter_rep
                             author_rep = element[5]
                             if author_rank == 1:
@@ -90,18 +87,17 @@ class Slash(commands.Cog):
                                 embed = discord.Embed(title="Classement des crédits", description="** **", color=0xFF8A3B)
                             else:
                                 embed = discord.Embed(title="Classement des crédits", description="** **")
-                            m_list.append(f"#{counter_rep} **{member.name}** : {element[5]}")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[5]}")
                         else:
                             embed = discord.Embed(title="Classement des points de réputation", description="** **")
-                            m_list.append(f"#{counter_rep} {member.name} : {element[5]}")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[5]}")
                         counter_rep += 1
                 embed.add_field(name=f"Ta position dans le classement est : **#{author_rank}** !\nAvec un total de **{author_rep}** crédit(s) !", value=f"\n{bs_n.join(m_list)}", inline=False)
             else:
                 embed = discord.Embed(title="Classement des crédits", description="** **")
                 for element in values:
                     if int(element[5]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        m_list.append(f"#{counter_rep} {member.name} : {element[1]}")
+                        m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]}")
                         counter_rep += 1
                 embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **/start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)
@@ -122,12 +118,11 @@ class Slash(commands.Cog):
                 author_level_s = int(author_values[2])
                 for element in values:
                     if int(element[1]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        member_id = (f"{member.id}",)
+                        member_id = (f"{element[0]}",)
                         cursor.execute('SELECT * FROM {} WHERE user_id = ?'.format(guild_name), member_id) # niveaux triés
                         author_level = cursor.fetchone()
                         author_level_a = int(author_level[2])
-                        if member == ctx.author:
+                        if element[0] == ctx.author.id:
                             author_level_s = author_level_a
                             author_rank = counter_rep
                             author_rep = element[1]
@@ -139,17 +134,16 @@ class Slash(commands.Cog):
                                 embed = discord.Embed(title="Classement des points d'expérience", description="** **", color=0xFF8A3B)
                             else:
                                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
-                            m_list.append(f"#{counter_rep} **{member.name}** : {element[1]} ({author_level_a})")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]} ({author_level_a})")
                         else:
-                            m_list.append(f"#{counter_rep} {member.name} : {element[1]} ({author_level_a})")
+                            m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]} ({author_level_a})")
                         counter_rep += 1
                 embed.add_field(name=f"Ta position dans le classement de ce serveur est : **#{author_rank}** !\nAvoir atteint le niveau **{author_level_s}** et un total de **{author_rep}** points d'expérience !", value=f"{bs_n.join(m_list)}", inline=False)
             else:
                 embed = discord.Embed(title="Classement des points d'expérience", description="** **")
                 for element in values:
                     if int(element[1]) > 0:
-                        member = await self.bot.fetch_user(str(element[0]))
-                        m_list.append(f"#{counter_rep} {member.name} : {element[1]} ({author_level_a})")
+                        m_list.append(f"#{counter_rep} <@{element[0]}> : {element[1]} ({author_level_a})")
                         counter_rep += 1
                 embed.add_field(name=f"Tu n'es pas noté dans le classement car n'es pas inscrit à l'aventure ISO land...\nTu peux t'inscrire avec la commande **/start** !", value=f"\n{bs_n.join(m_list)}", inline=False)
             await ctx.send(embed=embed)

@@ -20,7 +20,10 @@ class Slash(commands.Cog):
 
         roles_list, espace = [], " "
         for role in membre.roles:
-               roles_list.append(str(role.mention))
+            if role.name != "@everyone":
+                roles_list.append(str(role.mention))
+        roles_list = roles_list[::-1]
+        print(roles_list)
         embed = discord.Embed(title=str(membre.name) + "#" + str(membre.discriminator), description=membre.mention, color=0xf5900b)
         embed.set_thumbnail(url=str(membre.avatar_url))
         embed.set_footer(text=f"ID : {membre.id}")

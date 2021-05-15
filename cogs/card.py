@@ -39,8 +39,6 @@ class Slash(commands.Cog):
                 about_para = member_values[3]
                 afk_status = member_values[4]
                 daily = member_values[5]
-                job = member_values[6]
-                job_emoji = json_object_nm['jobs'][str(job)][2]
 
                 if about_para == "":
                     about_para = "Je suis un nouveau dans l'aventure d'ISO land !"

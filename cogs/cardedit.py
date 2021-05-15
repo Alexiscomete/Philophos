@@ -75,7 +75,7 @@ class Slash(commands.Cog):
                 updated_user = ("Nonei", f"{message.author.id}",)
                 cursor.execute('UPDATE tt_iso_card SET afk = ? WHERE user_id = ?', updated_user)
                 connection.commit()
-                await message.channel.send(f"{message.author.mention} Tu es de retour ! Ton statut AFK a donc été désactivé.", delete_after=10)
+                #await message.channel.send(f"{message.author.mention} Tu es de retour ! Ton statut AFK a donc été désactivé.", delete_after=10)
 
         if message and not message.content.startswith(f"/cardedit") and not message.content.startswith(f"/card") and message.author.bot == False:
             for user in message.mentions:

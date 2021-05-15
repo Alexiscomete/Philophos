@@ -121,3 +121,11 @@ initial_py_cogs - DO NOT DELETE/work.py
 unused_cogs/._daily.py
 unused_cogs/._rep.py
 unused_cogs/._work.py
+#AUTRES/._courbe de l'exp par rapport aux niveaux.xlsx
+#AUTRES/._starboard.db
+cogs/._userinfo.py
+#AUTRES/._starboard.db
+#AUTRES/._courbe de l'exp par rapport aux niveaux.xlsx
+*.db
+#AUTRES/._courbe de l'exp par rapport aux niveaux.xlsx
+*.xlsx
