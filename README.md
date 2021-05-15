@@ -1,4 +1,4 @@
-# Amanager
+# Amanager !!
 
 Amanager est un bot Discord multi-tâches qui peut vous aider ou avec qui vous pouvez vous divertir !
 <p align="center">
@@ -105,7 +105,7 @@ Amanager est un projet créé par [ISO Land](https://iso-land.org).
 
 * Start
 * Card
-* Rank
+* Rank ([calculatrice par Cyanic76](https://github.com/Cyanic76/Amanager-Level-Calc))
 * Rep
 * Top
 * Daily
